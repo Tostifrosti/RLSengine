@@ -1,0 +1,5 @@
+<!DOCTYPE Animations>
+<animations>
+ <animation name="animation1" width="150" height="150" sequence="0,1,2,3" />
+ <animation name="animation2" width="250" height="250" sequence="0,1,2,3,4,5" />
+</animations>

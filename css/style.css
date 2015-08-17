@@ -1,0 +1,35 @@
+* {
+	zoom: 1;
+	-ms-touch-action: manipulation; /* IE10  */
+	touch-action: manipulation;     /* IE11+ */
+}
+html {
+	border: 0;
+}
+body {
+	margin: 0;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	
+	font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-webkit-font-smoothing: antialiased;
+	-webkit-font-smoothing: subpixel-antialiased;
+}
+canvas {
+	background-color: #000;
+	margin: 0 auto;
+	display: block;
+	border: 1px solid #CCC;
+
+	-ms-content-zooming: none;
+	-ms-touch-action: none;
+	touch-action: none;
+
+	image-rendering: auto;
+	
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
