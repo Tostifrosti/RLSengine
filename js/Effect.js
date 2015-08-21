@@ -4,12 +4,12 @@
 
 function Effect(object, property, targetValue, effectTime, timerStart) {
 	this.object = object;
-	this.endTimer = effectTime;
+	this.endTimer = effectTime || 1.0;
 	this.timer = 0;
 	this.propertyToChange = property;
 	this.startValue = this.object[this.propertyToChange];
-	this.targetValue = targetValue;
-	this.timerStart = timerStart;
+	this.targetValue = targetValue || 0;
+	this.timerStart = timerStart || 0.0;
 	this.huidigeTijd = 0;
 	this.startTime = Date.now();
 	this.finished = false;
@@ -38,7 +38,7 @@ Effect.prototype.update = function() {
 
 Effect.prototype.init = function() {
 	this.startTime = Date.now();
-	this.startValue = this.object[this.propertyToChange];
+	this.object[this.propertyToChange] = this.startValue;
 	this.timer = 0;
 	this.huidigeTijd = 0;
 	this.finished = false;

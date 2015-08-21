@@ -15,12 +15,6 @@ var self = null;
 
 function AudioPlayer() {
 	this._devMode = false;
-	/*this.supported = {
-		ogg: false,
-		mp3: false,
-		wav: false,
-		mp4: false
-	};*/
 	self = this;
 }
 AudioPlayer.prototype.load = function(sounds, callback) {

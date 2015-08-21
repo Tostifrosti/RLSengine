@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="js/Display.js"></script>
 		<script type="text/javascript" src="js/Input/Mouse.js"></script>
 		<script type="text/javascript" src="js/Input/Keyboard.js"></script>
+		<script type="text/javascript" src="js/Effect.js"></script>
 		<script type="text/javascript" src="js/Image.js"></script>
 		<script type="text/javascript" src="js/ImageManager.js"></script>
 		<script type="text/javascript" src="js/Audioplayer.js"></script>

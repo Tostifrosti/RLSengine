@@ -2,7 +2,8 @@
 	@author RLSmedia, Rick Smeets
 */
 var IMAGES = {
-				"home" : "./images/bg_home.jpg" 
+				"home" : "./images/bg_home.jpg",
+				"logo" : "./images/IMG_3429.JPG"
 			 };
 
 
