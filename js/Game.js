@@ -1,7 +1,7 @@
 function Game() {
 	this.background = new Images(RLSengine.ImageManager.getImage("home"), {x:0, y:0}, RLSengine.Display.canvas.width, RLSengine.Display.canvas.height);
-	this.img = new Images(RLSengine.ImageManager.getImage("logo"), {x:200, y:300}, 100, 100);
-	this.effect = new Effect(this.img.position, "x", 700);
+	this.logo = new Images(RLSengine.ImageManager.getImage("logo"), {x:200, y:300}, 100, 100);
+	this.effect = new Effect(this.logo.position, "x", 900, 2.0, 0.0);
 }
 
 Game.prototype.update = function() {
@@ -12,8 +12,7 @@ Game.prototype.update = function() {
 	}
 };
 Game.prototype.draw = function() {
-	RLSengine._ctx.fillStyle = "#FFFFFF";
-	RLSengine._ctx.fillRect(0, 0, RLSengine.Display.canvas.width, RLSengine.Display.canvas.height);
+	RLSengine.Display.fillRect(0, 0, RLSengine.Display.canvas.width, RLSengine.Display.canvas.height, "#FFFFFF");
 	this.background.draw();
-	this.img.draw();
+	this.logo.draw();
 };

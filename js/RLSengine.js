@@ -52,8 +52,7 @@ RLSengine.init = function() {
 
 	try {
 		RLSengine._canvas = document.querySelector('canvas') || document.createElement('canvas');
-		RLSengine._ctx = RLSengine._canvas.getContext("2d");
-		RLSengine.Display = new Display(RLSengine._canvas, 1280, 720);
+		RLSengine.Display = new Display(RLSengine._canvas, RLSengine._ctx, 1280, 720);
 		document.body.appendChild(RLSengine._canvas);
 	} catch(e) {
 		console.error('Error: Canvas not found! Please upgrade your browser to support HTML5!');
@@ -63,12 +62,6 @@ RLSengine.init = function() {
 	RLSengine.Loading = [ XMLreader, ImageManager, AudioPlayer ];
 	RLSengine.Loading.MaxLength = RLSengine.Loading.length;
 	RLSengine.Loading.Finished = false;
-	/*RLSengine.Loading = {
-		XMLreader		: false,
-		ImageManager	: false,
-		AudioPlayer		: false,
-		Finished 		: false
-	};*/
 
 	//Device
 	RLSengine.Device = new Device();
@@ -109,32 +102,25 @@ RLSengine.init = function() {
 }
 
 RLSengine.loop = function() {
-	RLSengine._ctx.clearRect(0, 0, RLSengine.Display.canvas.height, RLSengine.Display.canvas.height);
+	RLSengine.Display.clearRect(0, 0, RLSengine.Display.canvas.height, RLSengine.Display.canvas.height);
 
 	if(!RLSengine.Loading.Finished) {
 		if(RLSengine.Loading.length <= 0) {
 			RLSengine.Loading.Finished = true;
 			RLSengine.Display.setScreen(new Game());
 		}
-		RLSengine._ctx.font = "40px Calibri";
-		RLSengine._ctx.fillStyle = "#FFFFFF";
-		RLSengine._ctx.fillText("RLSmedia", RLSengine.Display.canvas.width/2 - 75, RLSengine.Display.canvas.height/2 - 20);
-		RLSengine._ctx.fillStyle = "#555555";
-		RLSengine._ctx.fillRect(RLSengine.Display.canvas.width/2 - 300, RLSengine.Display.canvas.height/2, 600, 2);
-		RLSengine._ctx.fillStyle = "#FFFFFF";
-		RLSengine._ctx.fillRect(RLSengine.Display.canvas.width/2 - 300, RLSengine.Display.canvas.height/2, (100/RLSengine.Loading.length) * RLSengine.Loading.MaxLength, 2);
-		
+		RLSengine.Display.drawText(RLSengine.Display.canvas.width/2 - 75, RLSengine.Display.canvas.height/2 - 20, "RLSmedia", "#FFF", "40px Calibri");
+		RLSengine.Display.fillRect(RLSengine.Display.canvas.width/2 - 300, RLSengine.Display.canvas.height/2, 600, 2, "#555");
+		RLSengine.Display.fillRect(RLSengine.Display.canvas.width/2 - 300, RLSengine.Display.canvas.height/2, (100/RLSengine.Loading.length) * RLSengine.Loading.MaxLength, 2, "#FFF");
 	}
 
-	if(typeof(RLSengine.Display._screen) !== "undefined" && RLSengine.Display._screen !== null) {
-		RLSengine.Display._screen.update();
-		RLSengine.Display._screen.draw();
+	if(typeof(RLSengine.Display) !== "undefined" && RLSengine.Display !== null) {
+		RLSengine.Display.update();
+		RLSengine.Display.draw();
 	}
 
 	if(RLSengine.DevMode) {
-		RLSengine._ctx.font = "20px Calibri";
-		RLSengine._ctx.fillStyle = "Red";
-		RLSengine._ctx.fillText(fps.getFPS(), 30, 40);
+		RLSengine.Display.drawText(30, 40, fps.getFPS(), "#FF0000", "20px Calibri");
 	}
 
 	requestAnimFrame(RLSengine.loop);
@@ -168,5 +154,7 @@ RLSengine.pause = function(numberMillis) {
 	});
 
 }*/
+
+
 
 window.onload = RLSengine;
