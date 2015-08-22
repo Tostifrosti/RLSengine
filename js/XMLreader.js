@@ -3,56 +3,77 @@
 */
 
 function XMLreader() {
-	this._xmlHttp = null;
-	this._xmlDoc = null;
 	this._results = {};
 	this._finished = false;
-
-	if(window.XMLHttpRequest) {
-		//for IE7+, Firefox, Chrome, Safari, Opera
-		this._xmlHttp = new XMLHttpRequest();
-	} else {
-		// IE5, IE6
-		this._xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-
 }
 
 
-XMLreader.prototype.load = function(url, tagname, callback) {
+XMLreader.prototype.load = function(sources, callback) {
 	var self = this;
+	var sources = sources || {};
+	var numXML = 0;
+	var numXMLLoaded = 0;
+	var xml = {};
 	var callback = callback || {};
-	this._xmlHttp.onload = function() {
-		if(this.readyState === 4 && this.status === 200) {
-			if(this.responseXML !== null) {
-				self._finished = true;
-				self._xmlDoc = this.responseXML;
-				var elementTag = self._xmlDoc.getElementsByTagName(tagname);
-				
-				for(var i=0; i < elementTag.length; i++) {
-					self._results[i] = elementTag.item(i).attributes;
+
+	for(var name in sources) {
+		numXML++;
+	}
+
+	for(var name in sources) {
+		var url = sources[name];
+		if(window.XMLHttpRequest) {
+			//for IE7+, Firefox, Chrome, Safari, Opera
+			xml[name] = new XMLHttpRequest();
+		} else {
+			// IE5, IE6
+			xml[name] = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xml[name].onload = function() {
+			if(this.readyState === 4 && this.status === 200) {
+				if(this.responseXML !== null) {
+					var doc = this.responseXML;
+					var elementTag = doc.getElementsByTagName(name);
+					
+					for(var i=0; i < elementTag.length; i++) {
+						xml[name][i] = elementTag.item(i).attributes;
+					}
+					if(++numXMLLoaded >= numXML) {
+						self._results = xml;
+						self._finished = true;
+						callback(xml);
+					}
+					
+				} else {
+					self._finished = false;
+					alert("Something is wrong with the document!");
 				}
-				callback(self._results);
 			} else {
 				self._finished = false;
-				alert("Something is wrong with the document!");
+				console.error("Something went wrong!, xml cannot load... Please try again.");
 			}
-		} else {
-			self._finished = false;
-			console.error("Something went wrong!, xml cannot load... Please try again.");
-		}
-	};
-	this._xmlHttp.onerror = function(e) {
-		console.error("Something went wrong! " + e);
-	};
-	//Method, url async
-	this._xmlHttp.open("GET", url, true);
-	this._xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	this._xmlHttp.overrideMimeType('text/xml');
-	this._xmlHttp.send();
+		};
+
+		xml[name].onerror = function(e) {
+			console.error("Something went wrong! " + e);
+		};
+
+		//Method, url async
+		xml[name].src = sources[name];
+		xml[name].name = name;
+
+		xml[name].open("GET", url, true);
+		xml[name].setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xml[name].overrideMimeType('text/xml');
+		xml[name].send();
+	}
 };
 XMLreader.prototype.getResults = function() {
 	return this._results;
+};
+XMLreader.prototype.getXML = function(name) {
+	return this._results[name];
 };
 XMLreader.prototype.isFinished = function() {
 	return this._finished;

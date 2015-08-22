@@ -42,9 +42,5 @@ ImageManager.prototype.getAllImages = function() {
 	return this._images;
 };
 ImageManager.prototype.getImage = function(imgName) {
-	for(var image in this._images) {
-		if(image == imgName) {
-			return this._images[image];
-		}
-	}
+	return this._images[imgName];
 }

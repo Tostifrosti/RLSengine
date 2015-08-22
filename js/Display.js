@@ -11,6 +11,7 @@ function Display(canvas, context, width, height) {
 	this.screen = {};
 	this.screen.width = 0;
 	this.screen.height = 0;
+	
 	this.webglenabled = false;
 	this._init();
 }
@@ -51,6 +52,12 @@ Display.prototype.update = function() {
 };
 
 Display.prototype.draw = function() {
+	if(!this.webglenabled) {
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	} else {
+		this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+	}
+
 	if(typeof(this._screen) !== "undefined" && this._screen !== null)
 		this._screen.draw();
 };
@@ -81,15 +88,23 @@ Display.prototype.initContext = function(ctx, options) {
 				context = canvas.getContext('experimental-webgl2', options);
 				if(context) { return context; }
 			} catch(e) { console.error("No support for experimental-webgl2!"); }*/
+			
+			if(this.context) {
+				//Basic gl setup
+				this.context.clearColor(0.0, 0.0, 0.0, 1.0);
+				this.context.clearDepth(1.0);
+				this.context.enable(this.context.DEPTH_TEST);
+				this.context.depthFunc(this.context.LEQUAL);
+				this.context.viewport(0, 0, this.canvas.width, this.canvas.height);
+
+				//Setup GLSL program
+				/*this.vertexShader = createShaderFromScriptElement(this.context, "2d-vertex-shader");
+				this.fragmentShader = createShaderFromScriptElement(this.context, "2d-fragment-shader");
+				this.program = createProgram(this.context, this.vertexShader, this.fragmentShader);
+				this.context.useProgram(this.program);*/
+			}
 		}
 	}
-
-	/* Basic gl init?
-	this.context.clearColor(0.0, 0.0, 0.0, 1.0);
-	this.context.clearDepth(1.0);
-	this.context.enable(this.context.DEPTH_TEST);
-	this.context.depthFunc(this.context.LEQUAL);
-	this.context.viewport(0, 0, this.canvas.width, this.canvas.height);*/
 }
 
 //Draw
@@ -111,6 +126,28 @@ Display.prototype.fillRect = function(x, y, w, h, color) {
 	if(!this.webglenabled) {
 		this.context.fillStyle = color;
 		this.context.fillRect(x, y, w, h);
+	} else {
+		/*
+		var colorLocation = this.context.getUniformLocation(this.program, "u_color");
+		
+		//Setup Rectangle
+		var x1 = x;
+		var x2 = x + w;
+		var y1 = y;
+		var y2 = y + h;
+		this.context.bufferData(this.context.ARRAY_BUFFER, new Float32Array([
+			x1, y1,
+			x2, y1,
+			x1, y2,
+			x1, y2,
+			x2, y1,
+			x2, y2]), this.context.STATIC_DRAW);
+		}
+		//Set the color
+		this.context.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
+
+		//Draw the rectangle
+		this.context.drawArrays(this.context.TRIANGLES, 0, 6);*/
 	}
 };
 

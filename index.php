@@ -13,10 +13,11 @@
 		<script type="text/javascript" src="js/Input/Mouse.js"></script>
 		<script type="text/javascript" src="js/Input/Keyboard.js"></script>
 		<script type="text/javascript" src="js/Effect.js"></script>
+		<script type="text/javascript" src="js/XMLreader.js"></script>
 		<script type="text/javascript" src="js/Image.js"></script>
 		<script type="text/javascript" src="js/ImageManager.js"></script>
 		<script type="text/javascript" src="js/Audioplayer.js"></script>
-		<script type="text/javascript" src="js/XMLreader.js"></script>
+		<script type="text/javascript" src="js/AnimationManager.js"></script>
 		<script type="text/javascript" src="js/Facebook.js"></script>
 		
 		<script type="text/javascript" src="js/Game.js"></script>

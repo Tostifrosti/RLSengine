@@ -29,7 +29,7 @@ var fps = {
 	getFPS : function(){
 		this.frameNumber++;
 		var d = Date.now(); //new Date().getTime(),
-		currentTime = (( d - this.startTime ) / 1000),
+		var currentTime = (( d - this.startTime ) / 1000),
 		result = Math.floor( ( this.frameNumber / currentTime ) );
 
 		if( currentTime > 1 ){
@@ -48,7 +48,7 @@ function RLSengine() {
 }
 
 RLSengine.init = function() {
-	RLSengine.DevMode = true;
+	RLSengine.DevMode = false;
 
 	try {
 		RLSengine._canvas = document.querySelector('canvas') || document.createElement('canvas');
@@ -77,9 +77,9 @@ RLSengine.init = function() {
 	
 	//XMLreader
 	RLSengine.XMLreader = new XMLreader();
-	RLSengine.XMLreader.load("./xml/animations.xml", "animation", function(results) {
+	RLSengine.XMLreader.load(XML, function(results) {
 		RLSengine.Loading.splice(0, 1);
-		if(RLSengine.DevMode) console.info("animations.xml loaded!");
+		if(RLSengine.DevMode) console.info("All xml loaded!");
 	});
 
 	//ImageManager
@@ -96,14 +96,16 @@ RLSengine.init = function() {
 		if(RLSengine.DevMode) console.info("All audio loaded!");
 	});
 
+	//AnimationManager
+	RLSengine.AnimationManager = new AnimationManager();
+	//RLSengine.AnimationManager.load();
 
 	//Loop
 	RLSengine.loop();
 }
 
 RLSengine.loop = function() {
-	RLSengine.Display.clearRect(0, 0, RLSengine.Display.canvas.height, RLSengine.Display.canvas.height);
-
+	//Loading Screen
 	if(!RLSengine.Loading.Finished) {
 		if(RLSengine.Loading.length <= 0) {
 			RLSengine.Loading.Finished = true;
@@ -114,11 +116,13 @@ RLSengine.loop = function() {
 		RLSengine.Display.fillRect(RLSengine.Display.canvas.width/2 - 300, RLSengine.Display.canvas.height/2, (100/RLSengine.Loading.length) * RLSengine.Loading.MaxLength, 2, "#FFF");
 	}
 
+	//Update & Draw
 	if(typeof(RLSengine.Display) !== "undefined" && RLSengine.Display !== null) {
 		RLSengine.Display.update();
 		RLSengine.Display.draw();
 	}
 
+	//FPS
 	if(RLSengine.DevMode) {
 		RLSengine.Display.drawText(30, 40, fps.getFPS(), "#FF0000", "20px Calibri");
 	}
