@@ -4,7 +4,8 @@
 //IMAGES: { name : url };
 var IMAGES = {
 				"home" : "./images/bg_home.jpg",
-				"logo" : "./images/IMG_3429.JPG"
+				"logo" : "./images/IMG_3429.JPG",
+				"dochter_rechts" : "./images/dochter_Spritesheet_rechts.png"
 			 };
 
 //AUDIO: { name : [ url ] };

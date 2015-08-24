@@ -96,10 +96,6 @@ RLSengine.init = function() {
 		if(RLSengine.DevMode) console.info("All audio loaded!");
 	});
 
-	//AnimationManager
-	RLSengine.AnimationManager = new AnimationManager();
-	//RLSengine.AnimationManager.load();
-
 	//Loop
 	RLSengine.loop();
 }
