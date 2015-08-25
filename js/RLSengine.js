@@ -48,7 +48,7 @@ function RLSengine() {
 }
 
 RLSengine.init = function() {
-	RLSengine.DevMode = false;
+	RLSengine.DevMode = true;
 
 	try {
 		RLSengine._canvas = document.querySelector('canvas') || document.createElement('canvas');
@@ -107,15 +107,16 @@ RLSengine.loop = function() {
 			RLSengine.Loading.Finished = true;
 			RLSengine.Display.setScreen(new Game());
 		}
+		RLSengine.Display.fillRect(0, 0, RLSengine.Display.canvas.width, RLSengine.Display.canvas.height, "#000");
 		RLSengine.Display.drawText(RLSengine.Display.canvas.width/2 - 75, RLSengine.Display.canvas.height/2 - 20, "RLSmedia", "#FFF", "40px Calibri");
-		RLSengine.Display.fillRect(RLSengine.Display.canvas.width/2 - 300, RLSengine.Display.canvas.height/2, 600, 2, "#555");
-		RLSengine.Display.fillRect(RLSengine.Display.canvas.width/2 - 300, RLSengine.Display.canvas.height/2, (100/RLSengine.Loading.length) * RLSengine.Loading.MaxLength, 2, "#FFF");
-	}
-
-	//Update & Draw
-	if(typeof(RLSengine.Display) !== "undefined" && RLSengine.Display !== null) {
-		RLSengine.Display.update();
-		RLSengine.Display.draw();
+		RLSengine.Display.fillRect(RLSengine.Display.canvas.width/2 - 300, RLSengine.Display.canvas.height/2, 600, 2, "#FFF");
+		RLSengine.Display.fillRect(RLSengine.Display.canvas.width/2 + 300, RLSengine.Display.canvas.height/2, -((600/RLSengine.Loading.MaxLength) * RLSengine.Loading.length), 2, "#555");
+	} else {
+		//Update & Draw
+		if(typeof(RLSengine.Display) !== "undefined" && RLSengine.Display !== null) {
+			RLSengine.Display.update();
+			RLSengine.Display.draw();
+		}
 	}
 
 	//FPS

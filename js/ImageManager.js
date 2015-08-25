@@ -44,3 +44,10 @@ ImageManager.prototype.getAllImages = function() {
 ImageManager.prototype.getImage = function(imgName) {
 	return this._images[imgName];
 }
+
+/*ImageManager.prototype.resize = function(scaleX, scaleY) {
+	for(var image in this._images) {
+		image.width *= scaleX;
+		image.height *= scaleY;
+	}
+};*/

@@ -12,6 +12,8 @@ function Display(canvas, context, width, height) {
 	this.screen.width = 0;
 	this.screen.height = 0;
 	
+	this.scale = {x:1.0, y:1.0};
+
 	this.webglenabled = false;
 	this._init();
 }
@@ -26,6 +28,7 @@ Display.prototype._init = function() {
 	window.addEventListener('focus', this.focus, false);
 	
 	this.initContext("2d", { alpha: false });
+	//this.resize();
 };
 
 Display.prototype.setScreen = function(s) {
@@ -38,7 +41,29 @@ Display.prototype.setScreen = function(s) {
 };
 
 Display.prototype.resize = function() {
+	window.scrollTo(0,1);
 	//TODO: scaleing & resizing
+
+	//Resize canvas
+	/*RLSengine.Display.screen.width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	RLSengine.Display.screen.height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+	RLSengine.Display.scale.x = (RLSengine.Display.screen.width / RLSengine.Display.canvas.width);
+	RLSengine.Display.scale.y = (RLSengine.Display.screen.height / RLSengine.Display.canvas.height);
+
+	RLSengine.Display.canvas.width *= RLSengine.Display.scale.x;
+	RLSengine.Display.canvas.height *= RLSengine.Display.scale.y;
+
+	RLSengine.Display.scale.x = (RLSengine.Display.screen.width / RLSengine.Display.canvas.width);
+	RLSengine.Display.scale.y = (RLSengine.Display.screen.height / RLSengine.Display.canvas.height);*/
+
+	//Give commando to ImageManager to resize its images.
+	//RLSengine.ImageManager.resize(RLSengine.Display.scale.x, RLSengine.Display.scale.y);
+
+	//Mouse??
+
+	//Maybe give commando to Animation to resize its values...
+
 };
 
 Display.prototype.focus = function() {
@@ -58,8 +83,9 @@ Display.prototype.draw = function() {
 		this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
 	}
 
-	if(typeof(this._screen) !== "undefined" && this._screen !== null)
+	if(typeof(this._screen) !== "undefined" && this._screen !== null) {
 		this._screen.draw();
+	}
 };
 
 //	options "2d": alpha:bool, (Gecko only) willReadFrequently:bool, (Blink only) storage:string
@@ -153,7 +179,7 @@ Display.prototype.fillRect = function(x, y, w, h, color) {
 
 Display.prototype.drawImage = function(img, srcX, srcY, srcW, srcH, posX, posY, w, h) {
 	if(!this.webglenabled) {
-		this.context.drawImage(img, srcX, srcY, srcW, srcH, posX, posY, w, h);
+		this.context.drawImage(img, srcX, srcY, srcW, srcH, posX * this.scale.x, posY * this.scale.y, w * this.scale.x, h * this.scale.y);
 	}
 };
 

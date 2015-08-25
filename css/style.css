@@ -26,7 +26,7 @@ canvas {
 	background-color: #000;
 	margin: 0 auto;
 	display: block;
-	border: 1px solid #CCC;
+	border: 0px;
 
 	-ms-content-zooming: none;
 	-ms-touch-action: none;
