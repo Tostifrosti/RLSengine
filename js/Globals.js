@@ -5,7 +5,8 @@
 var IMAGES = {
 				"home" : "./images/bg_home.jpg",
 				"logo" : "./images/IMG_3429.JPG",
-				"dochter_rechts" : "./images/dochter_Spritesheet_rechts.png"
+				"dochter_rechts" : "./images/dochter_Spritesheet_rechts.png",
+				"btn_start" : "./images/start_btn.png"
 			 };
 
 //AUDIO: { name : [ url ] };

@@ -3,11 +3,12 @@
 */
 
 function Animation(spritesheet, width, height, sequence, type) {
-	this.spritesheet = spritesheet;
+	this.image = spritesheet;
 	this.width = width;
 	this.height = height;
 	this.sequence = sequence || [0];
 	this.type = type || 0; //Loop, PingPing, HoldLast, HoldFirst, Once
+	this.alpha = 1.0;
 
 	this.frame = 0;
 	this.frameIndex = 0;
@@ -73,7 +74,7 @@ Animation.prototype.update = function(fps) {
 
 	this.frame = this.sequence[this.frameIndex];
 	
-	var numColumns = Math.floor(this.spritesheet.width / this.width);
+	var numColumns = Math.floor(this.image.width / this.width);
 	
 	var row = Math.floor(this.frame / numColumns);
 	var column = (this.frame % numColumns);
@@ -89,7 +90,7 @@ Animation.prototype.draw = function(posX, posY) {
 	posX = posX || 0;
 	posY = posY || 0;
 	//img, srcX, srcY, srcW, srcH, posX, posY, w, h
-	RLSengine.Display.drawImage(this.spritesheet, this.xOffset, this.yOffset, this.width, this.height, posX, posY, this.width, this.height);
+	RLSengine.Display.drawImage(this.image, this.xOffset, this.yOffset, this.width, this.height, posX, posY, this.width, this.height, this.alpha);
 };
 Animation.prototype.getPingPong = function(tijd, length) {
 	var t = (tijd % (length * 2.0) );

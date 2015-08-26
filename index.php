@@ -6,22 +6,26 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<link rel="icon" href="images/RLSmedia_fav.ico" />
 		<script type="text/javascript" src="js/Globals.js"></script>
-		<script type="text/javascript" src="js/Point.js"></script>
-		<script type="text/javascript" src="js/Maths.js"></script>
-		<script type="text/javascript" src="js/Device.js"></script>
-		<script type="text/javascript" src="js/Display.js"></script>
-		<script type="text/javascript" src="js/Input/Mouse.js"></script>
-		<script type="text/javascript" src="js/Input/Keyboard.js"></script>
-		<script type="text/javascript" src="js/Effect.js"></script>
-		<script type="text/javascript" src="js/XMLreader.js"></script>
-		<script type="text/javascript" src="js/Image.js"></script>
-		<script type="text/javascript" src="js/ImageManager.js"></script>
-		<script type="text/javascript" src="js/Audioplayer.js"></script>
-		<script type="text/javascript" src="js/Animation.js"></script>
-		<script type="text/javascript" src="js/Facebook.js"></script>
+		<script type="text/javascript" src="js/engine/Point.js"></script>
+		<script type="text/javascript" src="js/engine/Maths.js"></script>
+		<script type="text/javascript" src="js/engine/Device.js"></script>
+		<script type="text/javascript" src="js/engine/Display.js"></script>
+		<script type="text/javascript" src="js/engine/Input/Mouse.js"></script>
+		<script type="text/javascript" src="js/engine/Input/Keyboard.js"></script>
+		<script type="text/javascript" src="js/engine/Timer.js"></script>
+		<script type="text/javascript" src="js/engine/Effect.js"></script>
+		<script type="text/javascript" src="js/engine/EffectSequence.js"></script>
+		<script type="text/javascript" src="js/engine/XMLreader.js"></script>
+		<script type="text/javascript" src="js/engine/Images.js"></script>
+		<script type="text/javascript" src="js/engine/ImageManager.js"></script>
+		<script type="text/javascript" src="js/engine/Audioplayer.js"></script>
+		<script type="text/javascript" src="js/engine/Animation.js"></script>
+		<script type="text/javascript" src="js/engine/Facebook.js"></script>
 		
+		<script type="text/javascript" src="js/GameScreen.js"></script>
+		<script type="text/javascript" src="js/MenuScreen.js"></script>
 		<script type="text/javascript" src="js/Game.js"></script>
-		<script type="text/javascript" src="js/RLSengine.js"></script>
+		<script type="text/javascript" src="js/engine/RLSengine.js"></script>
 		<title>HTML5</title>
 	</head>
 	<body>

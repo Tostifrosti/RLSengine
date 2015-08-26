@@ -32,7 +32,7 @@ Display.prototype._init = function() {
 };
 
 Display.prototype.setScreen = function(s) {
-	if(typeof(s) !== "undefined" && s !== null) { 
+	if(typeof(s) !== "undefined" && s !== null) {
 		this._screen = s;
 	} else {
 		console.error("Givin screen is undefined");
@@ -177,9 +177,12 @@ Display.prototype.fillRect = function(x, y, w, h, color) {
 	}
 };
 
-Display.prototype.drawImage = function(img, srcX, srcY, srcW, srcH, posX, posY, w, h) {
+Display.prototype.drawImage = function(img, srcX, srcY, srcW, srcH, posX, posY, w, h, alpha) {
+	var alpha = alpha || 1.0;
 	if(!this.webglenabled) {
+		this.context.globalAlpha = alpha;
 		this.context.drawImage(img, srcX, srcY, srcW, srcH, posX * this.scale.x, posY * this.scale.y, w * this.scale.x, h * this.scale.y);
+		this.context.globalAlpha = 1.0;
 	}
 };
 

@@ -48,7 +48,7 @@ function RLSengine() {
 }
 
 RLSengine.init = function() {
-	RLSengine.DevMode = true;
+	RLSengine.DevMode = false;
 
 	try {
 		RLSengine._canvas = document.querySelector('canvas') || document.createElement('canvas');
@@ -105,6 +105,7 @@ RLSengine.loop = function() {
 	if(!RLSengine.Loading.Finished) {
 		if(RLSengine.Loading.length <= 0) {
 			RLSengine.Loading.Finished = true;
+			if(RLSengine.DevMode) console.info("Loading Finished!");
 			RLSengine.Display.setScreen(new Game());
 		}
 		RLSengine.Display.fillRect(0, 0, RLSengine.Display.canvas.width, RLSengine.Display.canvas.height, "#000");

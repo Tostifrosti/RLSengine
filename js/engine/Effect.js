@@ -7,7 +7,7 @@ function Effect(object, property, targetValue, effectTime, timerStart) {
 	this.endTimer = effectTime || 1.0;
 	this.timer = 0;
 	this.propertyToChange = property;
-	this.startValue = this.object[this.propertyToChange];
+	this.startValue = this.object[this.propertyToChange] || 0.0;
 	this.targetValue = targetValue || 0;
 	this.timerStart = timerStart || 0.0;
 	this.huidigeTijd = 0;
@@ -38,7 +38,7 @@ Effect.prototype.update = function() {
 
 Effect.prototype.init = function() {
 	this.startTime = Date.now();
-	this.object[this.propertyToChange] = this.startValue;
+	this.startValue = this.object[this.propertyToChange] || 0.0;
 	this.timer = 0;
 	this.huidigeTijd = 0;
 	this.finished = false;
