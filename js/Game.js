@@ -1,5 +1,5 @@
 function Game() {
-	this.timer = new Timer(0.5);
+	this.timer = new Timer(3.0);
 }
 
 Game.prototype.update = function() {

@@ -10,7 +10,7 @@ function Effect(object, property, targetValue, effectTime, timerStart) {
 	this.startValue = this.object[this.propertyToChange] || 0.0;
 	this.targetValue = targetValue || 0;
 	this.timerStart = timerStart || 0.0;
-	this.huidigeTijd = 0;
+	this.currentTime = 0;
 	this.startTime = Date.now();
 	this.finished = false;
 }
@@ -19,9 +19,9 @@ Effect.prototype.update = function() {
 	var d = Date.now();
 	var deltaTime = (( d - this.startTime ) / 1000);
 	this.startTime = Date.now();
-	this.huidigeTijd += deltaTime;
+	this.currentTime += deltaTime;
 
-	if(this.huidigeTijd > this.timerStart) {
+	if(this.currentTime > this.timerStart) {
 		this.timer += deltaTime;
 		if(this.timer < this.endTimer) {
 			var totaleAfstand = (this.targetValue - this.startValue);
@@ -40,7 +40,7 @@ Effect.prototype.init = function() {
 	this.startTime = Date.now();
 	this.startValue = this.object[this.propertyToChange] || 0.0;
 	this.timer = 0;
-	this.huidigeTijd = 0;
+	this.currentTime = 0;
 	this.finished = false;
 };
 
