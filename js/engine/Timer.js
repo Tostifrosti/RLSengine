@@ -1,3 +1,7 @@
+/* 
+	@author RLSmedia, Rick Smeets
+*/
+
 function Timer(seconds) {
 	this.startTime = Date.now();
 	this.currentTime = 0;

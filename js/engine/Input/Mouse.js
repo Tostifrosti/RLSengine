@@ -1,10 +1,10 @@
-function Mouse(canvas) {
+function Mouse(canvas, scale) {
 	this._canvas = canvas;
-	this._pos = { x: 0, y: 0 };
-	this._lastClicked = { x: 0, y: 0 };
+	this._pos = { x: 0.0, y: 0.0 };
+	this._lastClicked = { x: 0.0, y: 0.0 };
 	this._clickedOnce = false;
 	this._mouseDown = false;
-	this._scale = { x: 1, y: 1 };
+	this._scale = scale || { x: 1.0, y: 1.0 };
 	this._canvas._mouse = this;
 	this.init();
 }
@@ -76,8 +76,8 @@ Mouse.prototype.move = function(e) {
 	e = e || event;
 	e.preventDefault();
 	var rect = this.getBoundingClientRect();
-	this._mouse._pos.x = (e.pageX - rect.left);
-	this._mouse._pos.y = (e.pageY - rect.top);
+	this._mouse._pos.x = (e.pageX - rect.left) * this._mouse._scale.x;
+	this._mouse._pos.y = (e.pageY - rect.top) * this._mouse._scale.y;
 	//if(this._mouse._clickedOnce)
 		//this._mouse._clickedOnce = false;
 };
@@ -94,8 +94,8 @@ Mouse.prototype.msClickDown = function(e) {
 	e = e || event;
 	e.preventDefault();
 	var rect = this.getBoundingClientRect();
-	this._mouse._pos.x = (e.clientX - rect.left);
-	this._mouse._pos.y = (e.clientY - rect.top);
+	this._mouse._pos.x = (e.clientX - rect.left) * this._mouse._scale.x;
+	this._mouse._pos.y = (e.clientY - rect.top) * this._mouse._scale.y;
 
 	if(!this._mouse._mouseDown) {
 		//this._mouse._clickedOnce = true;
@@ -106,8 +106,8 @@ Mouse.prototype.msMove = function(e) {
 	e = e || event;
 	e.preventDefault();
 	var rect = this.getBoundingClientRect();
-	this._mouse._pos.x = (e.clientX - rect.left);
-	this._mouse._pos.y = (e.clientY - rect.top);
+	this._mouse._pos.x = (e.clientX - rect.left) * this._mouse._scale.x;
+	this._mouse._pos.y = (e.clientY - rect.top) * this._mouse._scale.y;
 	//if(this._mouse._clickedOnce)
 		//this._mouse._clickedOnce = false;
 };
@@ -125,8 +125,8 @@ Mouse.prototype.touchStart = function(e) {
 	var t = e.touches[0] || e.changedTouches[0];
 	var rect = this.getBoundingClientRect();
 	if(t) {
-		this._mouse._lastClicked.x = (t.pageX - rect.left);
-		this._mouse._lastClicked.y = (t.pageY - rect.top);
+		this._mouse._lastClicked.x = (t.pageX - rect.left) * this._mouse._scale.x;
+		this._mouse._lastClicked.y = (t.pageY - rect.top) * this._mouse._scale.y;
 	}
 	if(!this._mouse._mouseDown) {
 		//this._mouse._clickedOnce = true;
@@ -139,8 +139,8 @@ Mouse.prototype.touchMove = function(e) {
 	var t = e.touches[0] || e.changedTouches[0];
 	var rect = this.getBoundingClientRect();
 	if(t) {
-		this._mouse._pos.x = (t.pageX - rect.left);
-		this._mouse._pos.y = (t.pageY - rect.top);
+		this._mouse._pos.x = (t.pageX - rect.left) * this._mouse._scale.x;
+		this._mouse._pos.y = (t.pageY - rect.top) * this._mouse._scale.y;
 	}
 	//if(this._mouse._clickedOnce)
 		//this._mouse._clickedOnce = false;
@@ -160,8 +160,8 @@ Mouse.prototype.touchCancel = function(e) {
 };
 
 Mouse.prototype.click = function(x, y, width, height, callback) {
-	if(this._pos.x >= x && this._pos.x <= x + width &&
-		this._pos.y >= y && this._pos.y  <= y + height && this._mouseDown) {
+	if(this._pos.x >= x && this._pos.x <= (x + width) &&
+		this._pos.y >= y && this._pos.y <= (y + height) && this._mouseDown) {
 		if(typeof(callback) !== "undefined") {
 			callback();
 		}
@@ -187,8 +187,8 @@ Mouse.prototype.getPosClicked = function() {
 
 Mouse.prototype.clickOnItem = function(posX, posY, width, height) {
 	if(this._isClicked) {
-		if ((this._lastClicked.x / this._scale.x) >= posX && (this._lastClicked.x / this._scale.x) <= (posX + width) &&
-			(this._lastClicked.y / this._scale.y) >= posY && (this._lastClicked.y / this._scale.y) <= (posY + height)) {
+		if (this._lastClicked.x >= posX && this._lastClicked.x <= (posX + width) &&
+			this._lastClicked.y >= posY && this._lastClicked.y <= (posY + height)) {
 			return true;
 		}
 	}
@@ -196,14 +196,10 @@ Mouse.prototype.clickOnItem = function(posX, posY, width, height) {
 };
 Mouse.prototype.moveOnItem = function(posX, posY, width, height) {
 	if(!this._isClicked) {
-		if ((this._pos.x / this._scale.x) >= posX && (this._pos.x / this._scale.x) <= (posX + width) &&
-			(this._pos.y / this._scale.y) >= posY && (this._pos.y / this._scale.y) <= (posY + height)) {
+		if (this._pos.x >= posX && this._pos.x <= (posX + width) &&
+			this._pos.y >= posY && this._pos.y <= (posY + height)) {
 			return true;
 		}
 	}
 	return false;
-};
-
-Mouse.prototype.updateScale = function(scale) {
-	this._scale = { x: scale.x, y: scale.y };
 };

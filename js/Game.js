@@ -12,5 +12,5 @@ Game.prototype.update = function() {
 };
 Game.prototype.draw = function() {
 	RLSengine.Display.fillRect(0, 0, RLSengine.Display.screen.width, RLSengine.Display.screen.height, "#000");
-	RLSengine.Display.drawText(RLSengine.Display.canvas.width/2 - 185, RLSengine.Display.canvas.height/2 - 20, "Made By Rick Smeets", "#FFF", "40px Calibri");
+	RLSengine.Display.drawText(RLSengine.Display.canvas.originWidth/2 - 185, RLSengine.Display.canvas.originHeight/2 - 20, "Made By Rick Smeets", "#FFF", 40, "Calibri");
 };

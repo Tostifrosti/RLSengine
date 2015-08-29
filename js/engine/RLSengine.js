@@ -48,14 +48,16 @@ function RLSengine() {
 }
 
 RLSengine.init = function() {
-	RLSengine.DevMode = false;
+	RLSengine.DevMode = true;
 
 	try {
 		RLSengine._canvas = document.querySelector('canvas') || document.createElement('canvas');
 		RLSengine.Display = new Display(RLSengine._canvas, RLSengine._ctx, 1280, 720);
+		RLSengine.Display.resize();
 		document.body.appendChild(RLSengine._canvas);
 	} catch(e) {
 		console.error('Error: Canvas not found! Please upgrade your browser to support HTML5!');
+		if(RLSengine.DevMode) console.error(e);
 		return;
 	}
 
@@ -73,7 +75,7 @@ RLSengine.init = function() {
 	RLSengine.Keyboard = new Keyboard(RLSengine._canvas);
 
 	//Mouse
-	RLSengine.Mouse = new Mouse(RLSengine._canvas);
+	RLSengine.Mouse = new Mouse(RLSengine._canvas, RLSengine.Display.scale);
 	
 	//XMLreader
 	RLSengine.XMLreader = new XMLreader();
@@ -96,6 +98,9 @@ RLSengine.init = function() {
 		if(RLSengine.DevMode) console.info("All audio loaded!");
 	});
 
+	//Request Fullscreen
+	//RLSengine.Display.canvas.addEventListener("touchstart", function() { RLSengine.Display.requestFullScreen(); }, false);
+
 	//Loop
 	RLSengine.loop();
 }
@@ -108,10 +113,10 @@ RLSengine.loop = function() {
 			if(RLSengine.DevMode) console.info("Loading Finished!");
 			RLSengine.Display.setScreen(new Game());
 		}
-		RLSengine.Display.fillRect(0, 0, RLSengine.Display.canvas.width, RLSengine.Display.canvas.height, "#000");
-		RLSengine.Display.drawText(RLSengine.Display.canvas.width/2 - 75, RLSengine.Display.canvas.height/2 - 20, "RLSmedia", "#FFF", "40px Calibri");
-		RLSengine.Display.fillRect(RLSengine.Display.canvas.width/2 - 300, RLSengine.Display.canvas.height/2, 600, 2, "#FFF");
-		RLSengine.Display.fillRect(RLSengine.Display.canvas.width/2 + 300, RLSengine.Display.canvas.height/2, -((600/RLSengine.Loading.MaxLength) * RLSengine.Loading.length), 2, "#555");
+		RLSengine.Display.fillRect(0, 0, RLSengine.Display.canvas.originWidth, RLSengine.Display.canvas.originHeight, "#000");
+		RLSengine.Display.drawText(RLSengine.Display.canvas.originWidth/2 - 75, RLSengine.Display.canvas.originHeight/2 - 20, "RLSmedia", "#FFF", 40, "Calibri");
+		RLSengine.Display.fillRect(RLSengine.Display.canvas.originWidth/2 - 300, RLSengine.Display.canvas.originHeight/2, 600, 2, "#FFF");
+		RLSengine.Display.fillRect(RLSengine.Display.canvas.originWidth/2 + 300, RLSengine.Display.canvas.originHeight/2, -((600/RLSengine.Loading.MaxLength) * RLSengine.Loading.length), 2, "#555");
 	} else {
 		//Update & Draw
 		if(typeof(RLSengine.Display) !== "undefined" && RLSengine.Display !== null) {
@@ -122,7 +127,7 @@ RLSengine.loop = function() {
 
 	//FPS
 	if(RLSengine.DevMode) {
-		RLSengine.Display.drawText(30, 40, fps.getFPS(), "#FF0000", "20px Calibri");
+		RLSengine.Display.drawText(30, 40, fps.getFPS(), "#FF0000", 20, "Calibri");
 	}
 
 	requestAnimFrame(RLSengine.loop);

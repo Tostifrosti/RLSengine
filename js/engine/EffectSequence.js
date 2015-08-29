@@ -1,3 +1,7 @@
+/* 
+	@author RLSmedia, Rick Smeets
+*/
+
 function EffectSequence() {
 	this.effects = [];
 	this.startValue = 0;
