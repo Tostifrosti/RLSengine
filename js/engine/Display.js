@@ -7,26 +7,29 @@ function Display(canvas, context, width, height) {
 	this.context = context;
 	this.canvas.width = width || 1280;
 	this.canvas.height = height || 720;
-	this.canvas.originWidth = width || 1280;
-	this.canvas.originHeight = height || 720;
+	this.canvas.getWidth = function() {
+		return width || 1280;
+	};
+	this.canvas.getHeight = function() {
+		return height || 720;
+	};
 
 	this.screen = {};
-	this.screen.width = 0;
-	this.screen.height = 0;
-	this.screen.originWidth = 0;
-	this.screen.originHeight = 0;
+	var screenWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	var screenHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+	this.screen.width = screenWidth;
+	this.screen.height = screenHeight;
+	this.screen.getWidth = function(){
+		return screenWidth;
+	};
+	this.screen.getHeight = function(){
+		return screenHeight;
+	};
 	
 	this.scale = {x:1.0, y:1.0};
-
 	this._screen = null;
-
 	this.webglenabled = false;
-	this._init();
-}
-
-Display.prototype._init = function() {
-	this.screen.width = this.screen.originWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-	this.screen.height = this.screen.originHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+	
 
 	window.addEventListener('resize', this.resize, false);
 	window.addEventListener('orientationchange', this.resize, false);
@@ -34,7 +37,7 @@ Display.prototype._init = function() {
 	window.addEventListener('focus', this.focus, false);
 	
 	this.initContext("2d", { alpha: false });
-};
+}
 
 Display.prototype.setScreen = function(s) {
 	if(typeof(s) !== "undefined" && s !== null) {
@@ -71,8 +74,8 @@ Display.prototype.resize = function() {
 	RLSengine.Display.canvas.width *= scaleX;
 	RLSengine.Display.canvas.height *= scaleY;
 
-	RLSengine.Display.scale.x = (RLSengine.Display.canvas.originWidth / RLSengine.Display.canvas.width);
-	RLSengine.Display.scale.y = (RLSengine.Display.canvas.originHeight / RLSengine.Display.canvas.height);
+	RLSengine.Display.scale.x = (RLSengine.Display.canvas.getWidth() / RLSengine.Display.canvas.width);
+	RLSengine.Display.scale.y = (RLSengine.Display.canvas.getHeight() / RLSengine.Display.canvas.height);
 
 	//Mouse for PosX & PosY ??
 

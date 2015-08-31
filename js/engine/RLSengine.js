@@ -113,10 +113,10 @@ RLSengine.loop = function() {
 			if(RLSengine.DevMode) console.info("Loading Finished!");
 			RLSengine.Display.setScreen(new Game());
 		}
-		RLSengine.Display.fillRect(0, 0, RLSengine.Display.canvas.originWidth, RLSengine.Display.canvas.originHeight, "#000");
-		RLSengine.Display.drawText(RLSengine.Display.canvas.originWidth/2 - 75, RLSengine.Display.canvas.originHeight/2 - 20, "RLSmedia", "#FFF", 40, "Calibri");
-		RLSengine.Display.fillRect(RLSengine.Display.canvas.originWidth/2 - 300, RLSengine.Display.canvas.originHeight/2, 600, 2, "#FFF");
-		RLSengine.Display.fillRect(RLSengine.Display.canvas.originWidth/2 + 300, RLSengine.Display.canvas.originHeight/2, -((600/RLSengine.Loading.MaxLength) * RLSengine.Loading.length), 2, "#555");
+		RLSengine.Display.fillRect(0, 0, RLSengine.Display.canvas.getWidth(), RLSengine.Display.canvas.getHeight(), "#000");
+		RLSengine.Display.drawText(RLSengine.Display.canvas.getWidth()/2 - 75, RLSengine.Display.canvas.getHeight()/2 - 20, "RLSmedia", "#FFF", 40, "Calibri");
+		RLSengine.Display.fillRect(RLSengine.Display.canvas.getWidth()/2 - 300, RLSengine.Display.canvas.getHeight()/2, 600, 2, "#FFF");
+		RLSengine.Display.fillRect(RLSengine.Display.canvas.getWidth()/2 + 300, RLSengine.Display.canvas.getHeight()/2, -((600/RLSengine.Loading.MaxLength) * RLSengine.Loading.length), 2, "#555");
 	} else {
 		//Update & Draw
 		if(typeof(RLSengine.Display) !== "undefined" && RLSengine.Display !== null) {

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-		<link rel="stylesheet" type="text/css" href="css/style.css" />
-		<link rel="icon" href="images/RLSmedia_fav.ico" />
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link rel="icon" href="images/RLSmedia_fav.ico">
 		<script type="text/javascript" src="js/Globals.js"></script>
 		<script type="text/javascript" src="js/engine/Point.js"></script>
 		<script type="text/javascript" src="js/engine/Maths.js"></script>
