@@ -55,5 +55,14 @@ Point.prototype.distance = function(p) {
 Point.prototype.toString = function() {
 	console.log("Point(" + this.x + "," + this.y + ")");
 };
+Point.prototype.getMagnitude = function() {
+	return Math.sqrt(this.x * this.x + this.y * this.y);
+};
+Point.prototype.getAngle = function() {
+	return Math.atan2(this.y, this.x);
+};
+Point.fromAngle = function(angle, magnitude) {
+	return new Point(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
+};
 
 //TODO: floor, ceil, round ?

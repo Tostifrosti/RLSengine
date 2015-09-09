@@ -9,12 +9,14 @@
 		<link rel="icon" href="images/RLSmedia_fav.ico">
 		<script type="text/javascript" src="js/Globals.js"></script>
 		<script type="text/javascript" src="js/engine/Point.js"></script>
-		<script type="text/javascript" src="js/engine/Maths.js"></script>
-		<script type="text/javascript" src="js/engine/Device.js"></script>
+		<script type="text/javascript" src="js/engine/Math.js"></script>
+		<script type="text/javascript" src="js/engine/Device.js"></script> 
 		<script type="text/javascript" src="js/engine/Display.js"></script>
 		<script type="text/javascript" src="js/engine/Input/Mouse.js"></script>
 		<script type="text/javascript" src="js/engine/Input/Keyboard.js"></script>
 		<script type="text/javascript" src="js/engine/Timer.js"></script>
+		<script type="text/javascript" src="js/engine/Location.js"></script>
+		<script type="text/javascript" src="js/engine/Particle.js"></script>
 		<script type="text/javascript" src="js/engine/Effect.js"></script>
 		<script type="text/javascript" src="js/engine/EffectSequence.js"></script>
 		<script type="text/javascript" src="js/engine/XMLreader.js"></script>

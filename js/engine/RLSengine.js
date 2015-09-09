@@ -68,9 +68,6 @@ RLSengine.init = function() {
 	//Device
 	RLSengine.Device = new Device();
 
-	//Math
-	RLSengine.Math = new Maths();
-
 	//Keyboard
 	RLSengine.Keyboard = new Keyboard(RLSengine._canvas);
 
@@ -97,6 +94,9 @@ RLSengine.init = function() {
 		RLSengine.Loading.splice(0, 1);
 		if(RLSengine.DevMode) console.info("All audio loaded!");
 	});
+
+	//Location
+	RLSengine.Location = new Location({enableHighAccuracy: false, timeout: 30000, maximumAge: 30000});
 
 	//Request Fullscreen
 	//RLSengine.Display.canvas.addEventListener("touchstart", function() { RLSengine.Display.requestFullScreen(); }, false);

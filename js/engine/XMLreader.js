@@ -66,7 +66,7 @@ XMLreader.prototype.load = function(sources, callback) {
 		xml[name].open("GET", url, true);
 		xml[name].setRequestHeader('Content-type','application/x-www-form-urlencoded');
 		xml[name].overrideMimeType('text/xml');
-		xml[name].send();
+		xml[name].send(null);
 	}
 };
 XMLreader.prototype.getResults = function() {
