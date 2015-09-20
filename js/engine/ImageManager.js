@@ -23,7 +23,6 @@ ImageManager.prototype.load = function(sources, callback) {
 			if (++numLoadedImages >= numImages) {
 				self._images = images;
 				self._isFinished = true;
-
 				callback(images);
 			}
 		};

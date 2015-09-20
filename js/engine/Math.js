@@ -30,3 +30,7 @@ Math.degreesToRadians = function(degrees) {
 	var radians = (degrees * Math.PI) / 180;
 	return radians;
 };
+
+Math.isNumeric = function(n) { 
+	return !isNaN(parseFloat(n)) && isFinite(n);
+};

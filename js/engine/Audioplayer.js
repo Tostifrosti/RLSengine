@@ -53,7 +53,7 @@ AudioPlayer.prototype._init = function() {
 		if(typeof this._sounds[sound][0] !== "undefined" && this._sounds[sound][0] !== null) {
 			this._sounds[sound][0] = this._sounds[sound][0];
 		} else {
-			if(this._devMode) console.error("Error: '" + sound + "' audio is not supported in this browser!");
+			if(RLSengine.DevMode || this._devMode) console.error("Error: '" + sound + "' audio is not supported in this browser!");
 			delete this._sounds[sound];
 		}
 	}
@@ -234,7 +234,7 @@ AudioPlayer.prototype._playCtx = function(name, options) {
 		if(options.position >= 0 && options.position <= src.buffer.duration) {
 			src.currentTime = options.position;
 		} else {
-			console.error("Givin position of " + name + " is out of range! (Duration is "+src.buffer.duration+"s)");
+			if(this._devMode) console.error("Givin position of " + name + " is out of range! (Duration is "+src.buffer.duration+"s)");
 		}
 	} else {
 		src.currentTime = 0;
@@ -276,7 +276,7 @@ AudioPlayer.prototype._playHTML5 = function(name, options) {
 			if(options.position >= 0 && options.position <= src.buffer.duration) {
 				src.buffer.currentTime = options.position;
 			} else {
-				console.error("Givin position of " + name + " is out of range! (Duration is "+src.buffer.duration+"s)");
+				if(this._devMode) console.error("Givin position of " + name + " is out of range! (Duration is "+src.buffer.duration+"s)");
 			}
 		}
 		
@@ -301,7 +301,7 @@ AudioPlayer.prototype.checkDeviceIsOld = function() {
 AudioPlayer.prototype.pause = function(name) {
 	if(typeof this._allSounds[name] === 'undefined') return; //Unknown name or not finished loading
 	if(this._audio_ctx !== null) {
-		console.log("Pausing: " + name);
+		if(this._devMode) console.log("Pausing: " + name);
 		var src = this._allSounds[name].buffer;
 		if (!src.stop)
 			src.stop = src.noteOff;

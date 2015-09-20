@@ -40,16 +40,34 @@ var fps = {
 	}
 };
 
+
 function RLSengine() {
 	arguments.callee._canvas = null;
 	arguments.callee._ctx = null;
-
-	RLSengine.init();
+	arguments.callee.DevMode = true;
+	
+	RLSengine.load();
 }
 
-RLSengine.init = function() {
-	RLSengine.DevMode = true;
+RLSengine.load = function() {
 
+	var mods = ['js/engine/Globals.js', 'js/engine/Point.js', 'js/engine/Math.js', 'js/engine/Device.js', 'js/engine/Display.js',
+				'js/engine/Input/Mouse.js', 'js/engine/Input/Keyboard.js', 'js/engine/Timer.js', 'js/engine/Location.js',
+				'js/engine/Particle.js', 'js/engine/Effect.js', 'js/engine/EffectSequence.js', 'js/engine/XMLreader.js',
+				'js/engine/Images.js', 'js/engine/ImageManager.js', 'js/engine/Audioplayer.js', 'js/engine/Animation.js',
+				'js/engine/Facebook.js', 'js/GameScreen.js', 'js/MenuScreen.js', 'js/Game.js'];
+	var count = mods.length;
+	for(var i=0; i < mods.length; i++) {
+		RLSengine.loadModule(mods[i], function() { 
+			count--; 
+			if(count <= 0)
+				RLSengine.start();
+		});
+	}
+	
+}
+
+RLSengine.start = function() {
 	try {
 		RLSengine._canvas = document.querySelector('canvas') || document.createElement('canvas');
 		RLSengine.Display = new Display(RLSengine._canvas, RLSengine._ctx, 1280, 720);
@@ -64,6 +82,8 @@ RLSengine.init = function() {
 	RLSengine.Loading = [ XMLreader, ImageManager, AudioPlayer ];
 	RLSengine.Loading.MaxLength = RLSengine.Loading.length;
 	RLSengine.Loading.Finished = false;
+
+	//RLSengine.load('js/Game.js');
 
 	//Device
 	RLSengine.Device = new Device();
@@ -148,7 +168,15 @@ RLSengine.pause = function(numberMillis) {
 			return;
 	}
 }
-
+RLSengine.loadModule = function(mod, callback) {
+	callback = callback || {};
+	var element = document.createElement('script');
+	element.setAttribute('type', 'text/javascript');
+	element.setAttribute('src', mod);
+	element.addEventListener('load', callback, false);
+	var body = document.querySelector('head') || document.getElementsByTagName('head')[0];
+	body.appendChild(element);
+}
 //Zet dit onder elke subklasse: extend(raceauto, car);
 /*function extend(subConstructor, superConstructor) {
 	subConstructor.prototype = Object.create(superConstructor.prototype, {
@@ -161,7 +189,5 @@ RLSengine.pause = function(numberMillis) {
 	});
 
 }*/
-
-
 
 window.onload = RLSengine;

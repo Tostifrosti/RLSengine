@@ -51,8 +51,10 @@ Emitter.prototype.plotParticles = function(boundsX, boundsY) {
 	for(var i=0; i<this.particles.length; i++) {
 		var particle = this.particles[i];
 		var pos = particle.position;
+		var x = this.position.x < 0 ? this.position.x : 0;
+		var y = this.position.y < 0 ? this.position.y : 0;
 
-		if (pos.x < 0 || pos.x > boundsX || pos.y < 0 || pos.y > boundsY) continue;
+		if (pos.x < x || pos.x > boundsX || pos.y < y || pos.y > boundsY) continue;
 
 		particle.move();
 

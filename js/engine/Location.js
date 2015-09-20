@@ -24,7 +24,7 @@ Location.prototype.requestLocation = function(callback) {
 		navigator.geolocation.getCurrentPosition(this.displayLocation, this.errorHandler, this.options);
 	} else {
 		//No Support
-		if(RLSengine.DevMode) console.log("No support for location!");
+		if(RLSengine.DevMode) console.error("No support for location!");
 	}
 };
 Location.prototype.displayLocation = function(position) {
@@ -41,7 +41,7 @@ Location.prototype.errorHandler = function(e) {
 		3: "Request timed out"
 	};
 
-	if(RLSengine.DevMode) console.log("Error: " + errorTypes[e.code] + "!");
+	if(RLSengine.DevMode) console.error("Error: " + errorTypes[e.code] + "!");
 	return errorTypes[e.code];
 };
 Location.prototype.getCoords = function() {
