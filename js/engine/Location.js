@@ -6,7 +6,7 @@ function Location(options) {
 	arguments.callee.coords = {
 		latitude: 0.0,
 		longitude: 0.0,
-		accuracy: 0,
+		accuracy: 0
 	};
 	this.radius = 6371; // radius of the Earth in km
 	this.options = options || {
@@ -46,4 +46,4 @@ Location.prototype.errorHandler = function(e) {
 };
 Location.prototype.getCoords = function() {
 	return Location.coords;
-}
+};

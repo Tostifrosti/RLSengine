@@ -2,7 +2,7 @@
 	@author RLSmedia, Rick Smeets
 
 1. Create audio context
-2. Inside the context, create sources — such as <audio>, oscillator, stream
+2. Inside the context, create sources - such as <audio>, oscillator, stream
 3. Create effects nodes, such as reverb, biquad filter, panner, compressor
 4. Choose final destination of audio, for example your system speakers
 5. Connect the sources up to the effects, and the effects to the destination.
@@ -17,9 +17,11 @@ function AudioPlayer() {
 	this._devMode = false;
 	self = this;
 }
-AudioPlayer.prototype.load = function(sounds, callback) {
+AudioPlayer.prototype.load = function(sounds, isIOS, callback) {
 	this._sounds = sounds || {};
 	this._allSounds = {};
+	this.isPlaying = [];
+	this.isIOS = isIOS || false;
 	this._callback = callback || function(){};
 
 	this._audioType = null;
@@ -90,14 +92,14 @@ AudioPlayer.prototype._addSound = function(buffer, gainNode, name, url, start, d
 		start: start,
 		duration: duration,
 		volume: volume,
-		loop: loop
+		loop: loop,
+		isPlaying: false
 	};
 };
 
 /* Loading */
 AudioPlayer.prototype._loadHTML5 = function() {
 	if(this._devMode) console.log("Loading audio in HTML5..");
-	//var self = this;
 	var currentSound = 0;
 	var totalSounds = 0;
 	var audiobuffer = null;
@@ -124,6 +126,11 @@ AudioPlayer.prototype._loadHTML5 = function() {
 
 		audiobuffer.setAttribute("loaded", false);
 		audiobuffer.appendChild(src1_el);
+		audiobuffer.addEventListener('ended', function() {
+			audiobuffer.isPlaying = false;
+			self.isPlaying.splice(self.isPlaying.indexOf(audiobuffer), 1);
+		});
+
 		
 		document.body.appendChild(audiobuffer);
 		audiobuffer.pause(); //Fix for IE
@@ -143,7 +150,6 @@ AudioPlayer.prototype._loadHTML5 = function() {
 };
 AudioPlayer.prototype._loadContext = function() {
 	if(this._devMode) console.log("Loading audio in AudioContext..");
-	//var self = this;
 	var currentSound = 0;
 	var totalSounds = 0;
 	var all_musicLoaded = false;
@@ -161,7 +167,9 @@ AudioPlayer.prototype._loadContext = function() {
 		request.open('GET', url, true); //true = asynchronously
 		request.responseType = 'arraybuffer';
 		request.onload = function() {
-			context.decodeAudioData(request.response, callback);
+			context.decodeAudioData(request.response, callback, function(e) {
+				console.error("Decoding error: The stream provided is corrupt or unsupported!");
+			});
 			//context.decodeAudioData(request.response).then(callback); // unknown\too new?
 		}
 		request.onerror = function() {
@@ -171,15 +179,21 @@ AudioPlayer.prototype._loadContext = function() {
 	}
 
 	var loadAudioData = function(name, context, url) {
-		loadMusic(url, context, function(buffer) { //Async
+		loadMusic(url, context, function(buffer) 
+		{
 			var source = self._audio_ctx.createBufferSource();
 			source.buffer = buffer;
 			self._addSound(source, null, name, url, 0, 0, 1.0, false);
-			if(self._devMode) console.log("Sound: "+name+", loaded! (" + url +")");
-			if(++currentSound >= totalSounds) {
-				document.addEventListener('touchstart', testIOS, true);
-				document.addEventListener('ontouchstart', testIOS, true);
-				if(self._devMode) console.log("All sound are loaded!");
+			if(self._devMode) 
+				console.log("Sound: "+name+", loaded! (" + url +")");
+			if(++currentSound >= totalSounds) 
+			{
+				if(self.isIOS) {
+					document.addEventListener('touchstart', testIOS, true);
+					document.addEventListener('ontouchstart', testIOS, true);
+				}
+				if(self._devMode) 
+					console.log("All sound are loaded!");
 				all_musicLoaded = true;
 				self._callback(this._allSounds);
 			}
@@ -196,7 +210,9 @@ AudioPlayer.prototype._loadContext = function() {
 AudioPlayer.prototype.play = function(name, options) {
 	options = options || {};
 	if(this._muted) return;
+	if(this._allSounds[name].isPlaying) return;
 
+	this._allSounds[name].isPlaying = true;
 	//this._currentSound = name;
 	if(this._audio_ctx !== null) {
 		this._playCtx(name, options);
@@ -210,10 +226,10 @@ AudioPlayer.prototype._playCtx = function(name, options) {
 	if(typeof this._allSounds[name] === 'undefined') return; //Unknown name
 
 	if(this._devMode) console.log("Playing: " + name);
-
+	var song = this._allSounds[name];
 	//Get Buffer
 	var src = this._audio_ctx.createBufferSource();
-	src.buffer = this._allSounds[name].buffer.buffer; //Audiobuffer
+	src.buffer = song.buffer.buffer; //Audiobuffer
 	
 	//Gainnode
 	var gainNode = this._audio_ctx.createGain(); //this._gainNode
@@ -223,11 +239,11 @@ AudioPlayer.prototype._playCtx = function(name, options) {
 	
 	//Volume
 	if(typeof options.volume !== 'undefined' && (options.volume >= 0.00 && options.volume <= 1.00)) { 
-		this._allSounds[name].volume = options.volume;
+		song.volume = options.volume;
 	} else {
-		this._allSounds[name].volume = 1.00;
+		song.volume = 1.00;
 	}
-	gainNode.gain.value = (this._allSounds[name].volume * this._masterVolume);
+	gainNode.gain.value = (song.volume * this._masterVolume);
 
 	//Position : TODO, only works in HTML5!
 	if(typeof(options.position) !== 'undefined') {
@@ -242,9 +258,16 @@ AudioPlayer.prototype._playCtx = function(name, options) {
 	
 	//Loop
 	if(typeof options.loop !== 'undefined') 
-		this._allSounds[name].loop = options.loop;
-	src.loop = this._allSounds[name].loop;
+		song.loop = options.loop;
+	src.loop = song.loop;
 	
+	this.isPlaying.push(song);
+	src.onended = function()
+	{
+		song.isPlaying = false;
+		self.isPlaying.splice(self.isPlaying.indexOf(song), 1);
+	};
+
 	//Play
 	if (!src.start)
 		src.start = src.noteOn;	//<!-- (Prefix) Safari 6 (oud / deprecated)
@@ -252,6 +275,11 @@ AudioPlayer.prototype._playCtx = function(name, options) {
 	//Offset, Position, Duration
 	//src.start(0, src.currentTime, src.buffer.duration - src.currentTime);
 	src.start(0);
+	/*
+	 void start (optional double when = 0
+              , optional double offset = 0
+              , optional double duration);
+	*/
 
 	this._allSounds[name].buffer = src;
 	this._allSounds[name].gainNode = gainNode;
@@ -261,32 +289,34 @@ AudioPlayer.prototype._playHTML5 = function(name, options) {
 
 	if(this._allSounds[name].buffer.getAttribute("loaded") === 'true') {
 		if(this._devMode) console.log("Playing: " + name);
-		var src = this._allSounds[name];
+		var song = this._allSounds[name];
 		
 		//Volume
 		if(typeof options.volume !== 'undefined' && (options.volume >= 0.00 && options.volume <= 1.00)) {
-			src.volume = options.volume;	
+			song.volume = options.volume;	
 		} else {
-			src.volume = 1.00;
+			song.volume = 1.00;
 		}
-		src.buffer.volume = (src.volume * this._masterVolume);
+		song.buffer.volume = (song.volume * this._masterVolume);
 
 		//Position
 		if(typeof options.position !== 'undefined'){
-			if(options.position >= 0 && options.position <= src.buffer.duration) {
-				src.buffer.currentTime = options.position;
+			if(options.position >= 0 && options.position <= song.buffer.duration) {
+				song.buffer.currentTime = options.position;
 			} else {
-				if(this._devMode) console.error("Givin position of " + name + " is out of range! (Duration is "+src.buffer.duration+"s)");
+				if(this._devMode) console.error("Givin position of " + name + " is out of range! (Duration is "+song.buffer.duration+"s)");
 			}
 		}
 		
 		//Loop
 		if(typeof options.loop !== 'undefined') 
-			src.loop = options.loop;
-		src.buffer.loop = src.loop;
+			song.loop = options.loop;
+		song.buffer.loop = song.loop;
+
+		this.isPlaying.push(song);
 
 		//Play
-		src.buffer.play();
+		song.buffer.play();
 	}
 };
 
@@ -299,46 +329,76 @@ AudioPlayer.prototype.checkDeviceIsOld = function() {
 };
 
 AudioPlayer.prototype.pause = function(name) {
+	console.log("Pause button pressed!");
 	if(typeof this._allSounds[name] === 'undefined') return; //Unknown name or not finished loading
+	var song = this._allSounds[name];
 	if(this._audio_ctx !== null) {
-		if(this._devMode) console.log("Pausing: " + name);
-		var src = this._allSounds[name].buffer;
-		if (!src.stop)
-			src.stop = src.noteOff;
-		src.stop(0); //0 = seconds delay before stopping
+		if(song.isPlaying)
+		{
+			if(this._devMode) 
+				console.log("Pause: " + name);
+			var src = this._allSounds[name].buffer;
+			if (!src.stop)
+				src.stop = src.noteOff;
+			src.stop(0); //0 = seconds delay before stopping
+			song.isPlaying = false;
+		} else {
+			if(this._devMode) 
+				console.log("Unpause: " + name);
+			var src = song.buffer;
+			if (!src.start) src.start = src.noteOn;
+			src.start(0);
+			song.isPlaying = true;
+		}
 	} else {
-		if (this._allSounds[name].buffer.paused && this._allSounds[name].buffer.currentTime > 0 && !this._allSounds[name].buffer.ended) {
+		if (song.buffer.paused && song.buffer.currentTime > 0 && !song.buffer.ended)
+		{
 			//Not playing...maybe paused, stoped or never played.
-			//console.log(name + ", is not playing!");
-			//this.play(name);
+			this.play(name);
+			song.isPlaying = true;
 		} else {
 			//Pausing..
 			if(this._devMode) console.log("Pausing: " + name);
-			this._allSounds[name].buffer.pause();
+			song.buffer.pause();
+			song.isPlaying = false;
 		}
 	}
 };
 AudioPlayer.prototype.stop = function(name) {
 	if(typeof this._allSounds[name] === 'undefined') return; //Unknown name or not finished loading
 	if(this._devMode) console.log("Stopping: " + name);
+	var song = this._allSounds[name];
 	if(this._audio_ctx !== null) {
-		var src = this._allSounds[name].buffer;
+		var src = song.buffer;
 		if (!src.stop)
 			src.stop = src.noteOff;
 		src.stop(0); //0 = seconds delay before stopping
+		/*
+		void stop (optional double when = 0);
+		*/
 	} else {
-		this._allSounds[name].buffer.pause();
-		this._allSounds[name].buffer.currentTime = 0;
+		song.buffer.pause();
+		song.buffer.currentTime = 0;
+	}
+	song.isPlaying = false;
+};
+AudioPlayer.prototype.getMute = function()
+{
+	return this._muted;
+};
+AudioPlayer.prototype.setMute = function(value) {
+	if(typeof value !== "boolean") { throw "AudioPlayer.setMute(value): value must be a boolean!"; return; }
+	if(this._devMode) console.log("Muting: " + value);
+	this._muted = value || false;
+	for(var i=0; i<this.isPlaying.length; i++)
+	{
+		if(this._muted) {
+			this.setMasterVolume(0.00);
+		} else {
+			this.setMasterVolume(1.00);
+		}
 	}
 };
-
-/*AudioPlayer.prototype.setMute = function(value) {
-	this._muted = value;
-	if(this._muted) {
-		//TODO: stop all music/sounds
-		//this.pause(this._currentSound);
-	}
-};*/
 
 AudioPlayer.prototype.setVolume = function(name, value) {
 	if(typeof(this._allSounds[name]) === 'undefined') return; //Unknown name or not finished loading
@@ -361,19 +421,29 @@ AudioPlayer.prototype.getVolume = function() {
 	return this._masterVolume;
 };
 
+AudioPlayer.prototype.setMasterVolume = function(value) {
+	if(typeof value !== "number") { throw "AudioPlayer.setMasterVolume(value): value must be a Integer or Float!"; return; }
+	for(var i=0; i<this.isPlaying.length; i++)
+	{
+		this.setVolume(this.isPlaying[i].name, value);
+	}
+};
+
 
 
 
 //Test for iOS else it doesnt work...
 function testIOS() {
-	if(typeof self.play === 'function') {
+	if(RLSengine.AudioPlayer == null) return;
+	if(typeof RLSengine.AudioPlayer.play === 'function') {
 		var name = null;
-		for(var s in self._allSounds) {
+		for(var s in RLSengine.AudioPlayer._allSounds) {
 			name = s; break;
 		}
 		document.removeEventListener('touchstart', testIOS, true);
 		document.removeEventListener('ontouchstart', testIOS, true);
-		self.play(name, { loop: false, volume: 0.0 });
+		RLSengine.AudioPlayer.play(name, { loop: false, volume: 0.0 });
+		RLSengine.AudioPlayer.stop(name);
 	}
 }
 

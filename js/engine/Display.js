@@ -160,15 +160,40 @@ Display.prototype.clearRect = function(x, y, width, height) {
 
 Display.prototype.drawText = function(x, y, text, color, size, font) {
 	if(!this.webglenabled) {
-		if(this.scale.x <= this.scale.y) size = (size || 16) / this.scale.y;
-		else size = (size || 16) / this.scale.x;
+		var fontSize = 0;
+		if(this.scale.x <= this.scale.y) 
+			fontSize = (size || 16) / this.scale.y;
+		else 
+			fontSize = (size || 16) / this.scale.x;
 		
 		font = font || "Calibri";
 		color = color || "#000";
-		this.context.font = size + "px " + font;
+		this.context.font = fontSize + "px " + font;
 		this.context.fillStyle = color;
-		this.context.fillText(text, x / this.scale.x, y / this.scale.y);
+		this.context.fillText(text, (x - (this.context.measureText(text).width/3)) / this.scale.x, (y + (size/3)) / this.scale.y);
 	}
+};
+Display.prototype.drawArc = function(xCenter, yCenter, radius, startAngle, endAngle, countclockwise, color, lineWidth, lineCap)
+{
+	/* 
+		   1.5
+		1       0
+		   0.5
+		everything * Math.PI, Max: 2.0, Min: 0.0
+	*/
+
+	countclockwise = countclockwise || false; //optional
+	lineWidth = lineWidth || 1;  //optional
+	lineCap = lineCap || 'square'; //optional, options: butt, round, square
+	var scale = (this.scale.x >= this.scale.y) ? this.scale.x : this.scale.y;
+
+	this.context.beginPath();
+	this.context.arc(xCenter / this.scale.x, yCenter / this.scale.y, radius / scale, startAngle, endAngle, countclockwise);
+	this.context.lineWidth = lineWidth;
+	this.context.lineCap = lineCap;
+	this.context.strokeStyle = color;
+	this.context.stroke();
+	//this.context.closePath(); //<- ?
 };
 Display.prototype.fillRect = function(x, y, w, h, color) {
 	if(!this.webglenabled) {
@@ -208,6 +233,10 @@ Display.prototype.drawImage = function(img, srcX, srcY, srcW, srcH, posX, posY, 
 	}
 };
 
+Display.prototype.getTextWidth = function(text)
+{
+	return this.context.measureText(text).width * this.scale.x;
+};
 /*function initWebGl() {
 	gl = null;
 	try {

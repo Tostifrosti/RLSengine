@@ -6,7 +6,11 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="mobile-web-app-capable" content="yes">
 		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<link rel="icon" href="images/RLSmedia_fav.ico">
+		<link rel="icon" href="images/RLSmedia_fav.ico" />
+		<link rel="apple-touch-icon" href="images/apple-touch-icon-ipad.png" />
+		<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-ipad.png" />
+		<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-iphone-retina-display.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon-180x180.png" />
 		<script type="text/javascript" src="js/engine/RLSengine.js"></script>
 		<title>HTML5</title>
 	</head>

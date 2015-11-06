@@ -8,9 +8,9 @@ Game.prototype.update = function() {
 	} else {
 		RLSengine.Display.setScreen(new MenuScreen());
 	}
-
 };
 Game.prototype.draw = function() {
 	RLSengine.Display.fillRect(0, 0, RLSengine.Display.screen.width, RLSengine.Display.screen.height, "#000");
-	RLSengine.Display.drawText(RLSengine.Display.canvas.getWidth()/2 - 185, RLSengine.Display.canvas.getHeight()/2 - 20, "Made By Rick Smeets", "#FFF", 40, "Calibri");
+	var text = "Made By Rick Smeets";
+	RLSengine.Display.drawText(RLSengine.Display.canvas.getWidth()/2 - RLSengine.Display.getTextWidth(text), RLSengine.Display.canvas.getHeight()/2 - 20, text, "#FFF", 40, "Calibri");
 };

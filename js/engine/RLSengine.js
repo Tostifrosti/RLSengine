@@ -62,6 +62,8 @@ RLSengine.load = function() {
 			count--; 
 			if(count <= 0)
 				RLSengine.start();
+		}, function(mod) {
+			if(RLSengine.DevMode) console.error("Error: " + mod + ", couldn't load!");
 		});
 	}
 	
@@ -71,7 +73,6 @@ RLSengine.start = function() {
 	try {
 		RLSengine._canvas = document.querySelector('canvas') || document.createElement('canvas');
 		RLSengine.Display = new Display(RLSengine._canvas, RLSengine._ctx, 1280, 720);
-		RLSengine.Display.resize();
 		document.body.appendChild(RLSengine._canvas);
 	} catch(e) {
 		console.error('Error: Canvas not found! Please upgrade your browser to support HTML5!');
@@ -83,43 +84,81 @@ RLSengine.start = function() {
 	RLSengine.Loading.MaxLength = RLSengine.Loading.length;
 	RLSengine.Loading.Finished = false;
 
-	//RLSengine.load('js/Game.js');
-
 	//Device
-	RLSengine.Device = new Device();
-
+	try {
+		RLSengine.Device = new Device();	
+	} catch(e) {
+		console.error("Error while loading: Device.js\n" + e);
+		RLSengine.Device = null;
+	}
+	
 	//Keyboard
-	RLSengine.Keyboard = new Keyboard(RLSengine._canvas);
+	try {
+		RLSengine.Keyboard = new Keyboard(RLSengine._canvas);
+	} catch(e) {
+		console.error("Error while loading: Keyboard.js\n" + e);
+		RLSengine.Keyboard = null;
+	}
 
 	//Mouse
-	RLSengine.Mouse = new Mouse(RLSengine._canvas, RLSengine.Display.scale);
+	try {
+		RLSengine.Mouse = new Mouse(RLSengine._canvas, RLSengine.Display.scale);
+	} catch(e) {
+		console.error("Error while loading: Mouse.js\n" + e);
+		RLSengine.Mouse = null;
+	}
 	
 	//XMLreader
-	RLSengine.XMLreader = new XMLreader();
-	RLSengine.XMLreader.load(XML, function(results) {
-		RLSengine.Loading.splice(0, 1);
-		if(RLSengine.DevMode) console.info("All xml loaded!");
-	});
+	try {
+		RLSengine.XMLreader = new XMLreader();
+		RLSengine.XMLreader.load(XML, function(results) {
+			RLSengine.Loading.splice(0, 1);
+			if(RLSengine.DevMode) console.info("All xml loaded!");
+		});
+	} catch(e) {
+		console.error("Error while loading: XMLreader.js\n" + e);
+		RLSengine.XMLreader = null;
+	}
+	
 
 	//ImageManager
-	RLSengine.ImageManager = new ImageManager();
-	RLSengine.ImageManager.load(IMAGES, function() {
-		RLSengine.Loading.splice(0, 1);
-		if(RLSengine.DevMode) console.info("All images loaded!");
-	});
+	try {
+		RLSengine.ImageManager = new ImageManager();
+		RLSengine.ImageManager.load(IMAGES, function() {
+			//RLSengine.Loading.splice(0, 1);
+			if(RLSengine.DevMode) console.info("All images loaded!");
+		});
+	} catch(e) {
+		console.error("Error while loading: ImageManager.js\n" + e);
+		RLSengine.ImageManager = null;
+	}
 
 	//AudioPlayer
-	RLSengine.AudioPlayer = new AudioPlayer();
-	RLSengine.AudioPlayer.load(AUDIO, function() {
-		RLSengine.Loading.splice(0, 1);
-		if(RLSengine.DevMode) console.info("All audio loaded!");
-	});
+	try {
+		RLSengine.AudioPlayer = new AudioPlayer();
+		RLSengine.AudioPlayer.load(AUDIO, (RLSengine.Device.isiOS && !RLSengine.Device.isStandAlone), function() {
+			//RLSengine.Loading.splice(0, 1);
+			if(RLSengine.DevMode) console.info("All audio loaded!");
+		});
+	} catch(e) {
+		console.error("Error while loading: AudioPlayer.js\n" + e);
+		RLSengine.AudioPlayer = null;
+	}
 
 	//Location
-	RLSengine.Location = new Location({enableHighAccuracy: false, timeout: 30000, maximumAge: 30000});
+	try {
+		RLSengine.Location = new Location({enableHighAccuracy: false, timeout: 30000, maximumAge: 30000});
+	} catch(e) {
+		console.error("Error while loading: Location.js\n" + e);
+		RLSengine.Location = null;
+	}
+	
 
 	//Request Fullscreen
 	//RLSengine.Display.canvas.addEventListener("touchstart", function() { RLSengine.Display.requestFullScreen(); }, false);
+
+	//Resize
+	RLSengine.Display.resize();
 
 	//Loop
 	RLSengine.loop();
@@ -133,10 +172,28 @@ RLSengine.loop = function() {
 			if(RLSengine.DevMode) console.info("Loading Finished!");
 			RLSengine.Display.setScreen(new Game());
 		}
-		RLSengine.Display.fillRect(0, 0, RLSengine.Display.canvas.getWidth(), RLSengine.Display.canvas.getHeight(), "#000");
-		RLSengine.Display.drawText(RLSengine.Display.canvas.getWidth()/2 - 75, RLSengine.Display.canvas.getHeight()/2 - 20, "RLSmedia", "#FFF", 40, "Calibri");
-		RLSengine.Display.fillRect(RLSengine.Display.canvas.getWidth()/2 - 300, RLSengine.Display.canvas.getHeight()/2, 600, 2, "#FFF");
-		RLSengine.Display.fillRect(RLSengine.Display.canvas.getWidth()/2 + 300, RLSengine.Display.canvas.getHeight()/2, -((600/RLSengine.Loading.MaxLength) * RLSengine.Loading.length), 2, "#555");
+		RLSengine.Display.context.clearRect(0, 0, RLSengine._canvas.width, RLSengine._canvas.height);
+		//RLSengine.Display.fillRect(0, 0, RLSengine.Display.canvas.getWidth(), RLSengine.Display.canvas.getHeight(), "#000");
+		//RLSengine.Display.drawText(RLSengine.Display.canvas.getWidth()/2 - 75, RLSengine.Display.canvas.getHeight()/2 - 20, "RLSmedia", "#FFF", 40, "Calibri");
+		//RLSengine.Display.fillRect(RLSengine.Display.canvas.getWidth()/2 - 300, RLSengine.Display.canvas.getHeight()/2, 600, 2, "#FFF");
+		//RLSengine.Display.fillRect(RLSengine.Display.canvas.getWidth()/2 + 300, RLSengine.Display.canvas.getHeight()/2, -((600/RLSengine.Loading.MaxLength) * RLSengine.Loading.length), 2, "#555");
+		var radius = 150;
+		var percentage = ((100/RLSengine.Loading.MaxLength) * RLSengine.Loading.length);
+		var degrees = percentage * 360.0;
+		var radians = degrees * (Math.PI / 180);
+		console.log(percentage);
+		RLSengine.Display.drawText((RLSengine.Display.canvas.getWidth()/2), (RLSengine.Display.canvas.getHeight()/2) - 200, "RLSmedia", "#FFF", 40, "Calibri");
+		RLSengine.Display.context.save();
+		RLSengine.Display.context.translate((RLSengine.Display.canvas.getWidth()/2), (RLSengine.Display.canvas.getHeight()/2)); // center
+		RLSengine.Display.context.rotate(20 * Math.PI / 180);
+		
+		RLSengine.Display.drawArc((RLSengine.Display.canvas.getWidth()/2), RLSengine.Display.canvas.getHeight()/2, radius, 2.0 * Math.PI, 0, true, "#555", 5, "square");
+		RLSengine.Display.drawArc((RLSengine.Display.canvas.getWidth()/2), RLSengine.Display.canvas.getHeight()/2, radius, 2.0 * Math.PI, radians / 100, true, "#FFF", 5, "round");
+		
+		// reset current transformation matrix to the identity matrix
+		//RLSengine.Display.context.setTransform(1, 0, 0, 1, 0, 0);
+		RLSengine.Display.context.restore();
+		RLSengine.Display.drawText((RLSengine.Display.canvas.getWidth()/2), (RLSengine.Display.canvas.getHeight()/2), parseInt(percentage) + "%", "#FFF", 40, "Calibri");
 	} else {
 		//Update & Draw
 		if(typeof(RLSengine.Display) !== "undefined" && RLSengine.Display !== null) {
@@ -168,12 +225,19 @@ RLSengine.pause = function(numberMillis) {
 			return;
 	}
 }
-RLSengine.loadModule = function(mod, callback) {
+RLSengine.loadModule = function(mod, callback, error) {
 	callback = callback || {};
+	error = error || {};
 	var element = document.createElement('script');
 	element.setAttribute('type', 'text/javascript');
 	element.setAttribute('src', mod);
-	element.addEventListener('load', callback, false);
+	//element.addEventListener('load', callback, false);
+	element.onload = function() {
+		callback();
+	};
+	element.onerror = function() {
+		error(mod);
+	};
 	var body = document.querySelector('head') || document.getElementsByTagName('head')[0];
 	body.appendChild(element);
 }

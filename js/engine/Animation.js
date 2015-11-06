@@ -108,3 +108,11 @@ Animation.prototype.reset = function() {
 Animation.prototype.isFinished = function() {
 	return this.finished;
 };
+Animation.prototype.getWidth = function()
+{
+	return this.width / RLSengine.Display.scale.x;
+};
+Animation.prototype.getHeight = function()
+{
+	return this.height / RLSengine.Display.scale.y;
+};
