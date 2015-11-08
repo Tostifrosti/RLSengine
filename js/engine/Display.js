@@ -179,7 +179,7 @@ Display.prototype.drawText = function(x, y, text, color, size, font) {
 		color = color || "#000";
 		this.context.font = fontSize + "px " + font;
 		this.context.fillStyle = color;
-		this.context.fillText(text, (x - (this.context.measureText(text).width/3)) / this.scale.x, (y + (size/3)) / this.scale.y);
+		this.context.fillText(text, (x - (this.context.measureText(text).width/2) * this.scale.x) / this.scale.x, (y + (fontSize/4) * this.scale.y) / this.scale.y);
 	}
 };
 Display.prototype.drawArc = function(xCenter, yCenter, radius, startAngle, endAngle, countclockwise, color, lineWidth, lineCap)

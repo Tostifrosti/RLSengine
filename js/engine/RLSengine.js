@@ -182,12 +182,13 @@ RLSengine.loop = function() {
 		var percentage = ((100/RLSengine.Loading.MaxLength) * RLSengine.Loading.length);
 		var degrees = percentage * 360.0;
 		var radians = degrees * (Math.PI / 180);
+		var scale = (RLSengine.Display.scale.x >= RLSengine.Display.scale.y) ? RLSengine.Display.scale.x : RLSengine.Display.scale.y;
 		RLSengine.Display.drawText((RLSengine.Display.canvas.getWidth()/2), (RLSengine.Display.canvas.getHeight()/2) - 200, "RLSmedia", "#FFF", 40, "Calibri");
 		
 		RLSengine.Display.context.translate(RLSengine.Display.canvas.width/2, RLSengine.Display.canvas.height/2); // center
 		RLSengine.Display.context.rotate(-90 * Math.PI / 180);
-		RLSengine.Display.drawArc(0, 0, radius, 2.0 * Math.PI, 0, true, "#555", 25, "square");
-		RLSengine.Display.drawArc(0, 0, radius, 2.0 * Math.PI, radians / 100, true, "#FFF", 25, "round");
+		RLSengine.Display.drawArc(0, 0, radius, 2.0 * Math.PI, 0, true, "#555", 25 / scale, "square");
+		RLSengine.Display.drawArc(0, 0, radius, 2.0 * Math.PI, radians / 100, true, "#FFF", 25 / scale, "round");
 		RLSengine.Display.context.setTransform(1, 0, 0, 1, 0, 0); // reset current transformation matrix to the identity matrix
 		
 		var p = (100 - parseInt(percentage));
