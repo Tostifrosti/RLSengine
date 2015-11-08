@@ -32,7 +32,7 @@ function MenuScreen() {
 	//Emitter / Snow
 	//Emitter(point, velocity, emissionRate, maxParticles, spread)
 	this.emitters = [new Emitter(new Point(300, -500), Point.fromAngle(1.5, 1), 1, 3000, 2), new Emitter(new Point(600, -500), Point.fromAngle(1.5, 1), 1, 3000, 2), new Emitter(new Point(900, -500), Point.fromAngle(1.5, 1), 1, 3000, 2)];
-	RLSengine.AudioPlayer.play("SunnyDay", {volume: 0.5, loop: false});
+	RLSengine.AudioPlayer.play("SunnyDay", {volume: 0.5, loop: true});
 }
 
 MenuScreen.prototype.update = function() {

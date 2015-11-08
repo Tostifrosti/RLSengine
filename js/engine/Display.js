@@ -47,6 +47,13 @@ Display.prototype.setScreen = function(s) {
 		this._screen = null;
 	}
 };
+Display.prototype.stop = function()
+{
+	window.removeEventListener('resize', this.resize, false);
+	window.removeEventListener('orientationchange', this.resize, false);
+	window.removeEventListener('focus', this.focus, false);
+
+};
 
 Display.prototype.resize = function() {
 	window.scrollTo(0,1);
@@ -151,7 +158,9 @@ Display.prototype.initContext = function(ctx, options) {
 }
 
 //Draw
-
+Display.prototype.clearScreen = function() {
+	this.clearRect(0, 0, this.canvas.width, this.canvas.height);
+};
 Display.prototype.clearRect = function(x, y, width, height) {
 	if(!this.webglenabled) {
 		this.context.clearRect(x / this.scale.x, y / this.scale.y, width / this.scale.x, height / this.scale.y);

@@ -90,7 +90,24 @@ Mouse.prototype._init = function() {
 		};
 	}
 };
-Mouse.prototype.remove = function() { };
+Mouse.prototype.remove = function() {
+	if(typeof window === "undefined") return;
+	if(window.navigator.msPointerEnabled) // For Windows Phone
+	{
+		window.MSPointerDown = function(e) { };
+		window.MSPointerMove = function(e) { };
+		window.MSPointerUp = function(e) { };
+	} else // For all major browsers, IE 9 and above
+	{
+		window.ontouchstart = function(e) { };
+		window.ontouchmove = function(e) { };
+		window.ontouchend = function(e) { };
+		window.ontouchcancel = function(e) { };
+		window.onmousedown = function(e) { };
+		window.onmousemove = function(e) { };
+		window.onmouseup = function(e) { };
+	}
+};
 
 Mouse._mouseUp = function(e) //STATIC
 {

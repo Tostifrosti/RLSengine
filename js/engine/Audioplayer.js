@@ -382,6 +382,13 @@ AudioPlayer.prototype.stop = function(name) {
 	}
 	song.isPlaying = false;
 };
+AudioPlayer.prototype.stopAll = function()
+{
+	for(var i=0; i<this.isPlaying.length; i++)
+	{
+		this.stop(this.isPlaying[i].name);
+	}
+};
 AudioPlayer.prototype.getMute = function()
 {
 	return this._muted;

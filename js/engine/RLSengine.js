@@ -1,7 +1,7 @@
 /* 
 	@author RLSmedia, Rick Smeets
 */
-var requestAnimFrame = (function(){
+var requestAnimFrame = (function(callback){
 	return window.requestAnimationFrame || 
 		window.webkitRequestAnimationFrame ||
 		window.mozRequestAnimationFrame ||
@@ -125,7 +125,7 @@ RLSengine.start = function() {
 	try {
 		RLSengine.ImageManager = new ImageManager();
 		RLSengine.ImageManager.load(IMAGES, function() {
-			//RLSengine.Loading.splice(0, 1);
+			RLSengine.Loading.splice(0, 1);
 			if(RLSengine.DevMode) console.info("All images loaded!");
 		});
 	} catch(e) {
@@ -137,7 +137,7 @@ RLSengine.start = function() {
 	try {
 		RLSengine.AudioPlayer = new AudioPlayer();
 		RLSengine.AudioPlayer.load(AUDIO, (RLSengine.Device.isiOS && !RLSengine.Device.isStandAlone), function() {
-			//RLSengine.Loading.splice(0, 1);
+			RLSengine.Loading.splice(0, 1);
 			if(RLSengine.DevMode) console.info("All audio loaded!");
 		});
 	} catch(e) {
@@ -165,6 +165,7 @@ RLSengine.start = function() {
 }
 
 RLSengine.loop = function() {
+	if(RLSengine === null) return;
 	//Loading Screen
 	if(!RLSengine.Loading.Finished) {
 		if(RLSengine.Loading.length <= 0) {
@@ -181,19 +182,16 @@ RLSengine.loop = function() {
 		var percentage = ((100/RLSengine.Loading.MaxLength) * RLSengine.Loading.length);
 		var degrees = percentage * 360.0;
 		var radians = degrees * (Math.PI / 180);
-		console.log(percentage);
 		RLSengine.Display.drawText((RLSengine.Display.canvas.getWidth()/2), (RLSengine.Display.canvas.getHeight()/2) - 200, "RLSmedia", "#FFF", 40, "Calibri");
-		RLSengine.Display.context.save();
-		RLSengine.Display.context.translate((RLSengine.Display.canvas.getWidth()/2), (RLSengine.Display.canvas.getHeight()/2)); // center
-		RLSengine.Display.context.rotate(20 * Math.PI / 180);
 		
-		RLSengine.Display.drawArc((RLSengine.Display.canvas.getWidth()/2), RLSengine.Display.canvas.getHeight()/2, radius, 2.0 * Math.PI, 0, true, "#555", 5, "square");
-		RLSengine.Display.drawArc((RLSengine.Display.canvas.getWidth()/2), RLSengine.Display.canvas.getHeight()/2, radius, 2.0 * Math.PI, radians / 100, true, "#FFF", 5, "round");
+		RLSengine.Display.context.translate(RLSengine.Display.canvas.width/2, RLSengine.Display.canvas.height/2); // center
+		RLSengine.Display.context.rotate(-90 * Math.PI / 180);
+		RLSengine.Display.drawArc(0, 0, radius, 2.0 * Math.PI, 0, true, "#555", 25, "square");
+		RLSengine.Display.drawArc(0, 0, radius, 2.0 * Math.PI, radians / 100, true, "#FFF", 25, "round");
+		RLSengine.Display.context.setTransform(1, 0, 0, 1, 0, 0); // reset current transformation matrix to the identity matrix
 		
-		// reset current transformation matrix to the identity matrix
-		//RLSengine.Display.context.setTransform(1, 0, 0, 1, 0, 0);
-		RLSengine.Display.context.restore();
-		RLSengine.Display.drawText((RLSengine.Display.canvas.getWidth()/2), (RLSengine.Display.canvas.getHeight()/2), parseInt(percentage) + "%", "#FFF", 40, "Calibri");
+		var p = (100 - parseInt(percentage));
+		RLSengine.Display.drawText((RLSengine.Display.canvas.getWidth()/2), (RLSengine.Display.canvas.getHeight()/2), p + "%", "#FFF", 40, "Calibri");
 	} else {
 		//Update & Draw
 		if(typeof(RLSengine.Display) !== "undefined" && RLSengine.Display !== null) {
@@ -210,10 +208,46 @@ RLSengine.loop = function() {
 	requestAnimFrame(RLSengine.loop);
 }
 
-RLSengine.stop = function() {
-	RLSengine.Mouse.remove();
-	RLSengine.Keyboard.remove();
-	cancelAnimationFrame();
+RLSengine.stop = function(dispose) {
+	if(typeof dispose !== 'boolean') return;
+	if(RLSengine.Loading !== null)
+		RLSengine.Loading = null;
+	if(RLSengine.Device !== null) 
+		RLSengine.Device = null;
+	if(RLSengine.Keyboard !== null) {
+		Keyboard.remove();
+		RLSengine.Keyboard = null;
+	}
+	if(RLSengine.Mouse !== null) {
+		RLSengine.Mouse.remove();
+		RLSengine.Mouse = null;
+	}
+	if(RLSengine.XMLreader !== null) 
+		RLSengine.XMLreader = null;
+	if(RLSengine.ImageManager !== null) 
+		RLSengine.ImageManager = null;
+	if(RLSengine.AudioPlayer !== null)  {
+		RLSengine.AudioPlayer.stopAll();
+		RLSengine.AudioPlayer = null;
+	}
+	if(RLSengine.Location !== null) 
+		RLSengine.Location = null;
+	if(RLSengine.Display !== null) {
+		RLSengine.Display.clearScreen();
+		RLSengine.Display.stop();
+		RLSengine.Display = null;
+	}
+	RLSengine.loop = function() {};
+	cancelAnimationFrame(requestAnimFrame);
+	
+	
+	console.clear();
+	if(dispose) RLSengine.dispose();
+	RLSengine = null;
+}
+RLSengine.dispose = function()
+{
+	document.body.removeChild(RLSengine._canvas);
 }
 
 RLSengine.pause = function(numberMillis) {
