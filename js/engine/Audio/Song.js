@@ -1,6 +1,13 @@
 /* 
 	@author RLSmedia, Rick Smeets
 */
+/* 
+	TODO: 
+	compressor 	= AudioContext.createDynamicsCompressor(), 
+	reverb 		= AudioContext.createConvolver(),
+	analyser 	= AudioContext.createAnalyser()
+*/
+
 
 function Song(audio_ctx, buffer, name, url, duration)
 {

@@ -51,8 +51,8 @@ function RLSengine() {
 
 RLSengine.load = function() {
 
-	var mods = ['js/engine/Globals.js', 'js/engine/Array.js', 'js/engine/Point.js', 'js/engine/Math.js', 'js/engine/Device.js', 'js/engine/Display.js',
-				'js/engine/Input/Mouse.js', 'js/engine/Input/Keyboard.js', 'js/engine/Timer.js', 'js/engine/Location.js',
+	var mods = ['js/engine/Globals.js', 'js/engine/Utils/Array.js', 'js/engine/Utils/Point.js', 'js/engine/Utils/Math.js', 'js/engine/Utils/Device.js', 'js/engine/Utils/Timer.js', 
+				'js/engine/Display.js', 'js/engine/Input/Mouse.js', 'js/engine/Input/Keyboard.js', 'js/engine/Location.js',
 				'js/engine/Particle.js', 'js/engine/Effect.js', 'js/engine/EffectSequence.js', 'js/engine/XMLreader.js',
 				'js/engine/Images.js', 'js/engine/ImageManager.js', 'js/engine/Audio/Song.js', 'js/engine/Audio/Audioplayer2.js', 'js/engine/Animation.js',
 				'js/engine/Facebook.js', 'js/GameScreen.js', 'js/MenuScreen.js', 'js/Game.js'];
