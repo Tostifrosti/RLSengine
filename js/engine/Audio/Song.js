@@ -129,8 +129,7 @@ Song.prototype.resume = function() {
 
 Song.prototype.setVolume = function(value) {
 	//console.log(this.name + " volume: " + value);
-	if(this.audio_ctx !== null)
-	{
+	if(this.audio_ctx !== null) {
 		if(this.gainNode !== null)
 			this.gainNode.gain.value = value;
 	} else {

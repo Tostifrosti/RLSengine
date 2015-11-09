@@ -255,10 +255,10 @@ AudioPlayer.prototype.setVolume = function(name, value) {
 	var song = this.checkSong(name);
 	if(song === null) { throw "AudioPlayer.setVolume(name, value): name is not valid!"; }
 
-	if(value < 0) value = 0; 
+	if(value < 0.00) value = 0; 
 	else if(value > 1.00) value = 1.00;
 	
-	song.setVolume(value * this._masterVolume);
+	song.setVolume((value * this._masterVolume));
 };
 /*AudioPlayer.prototype.getVolume = function() {
 	return this._masterVolume;
@@ -266,7 +266,7 @@ AudioPlayer.prototype.setVolume = function(name, value) {
 
 AudioPlayer.prototype.setMasterVolume = function(value) {
 	if(typeof value !== "number") { throw "AudioPlayer.setMasterVolume(value): value must be a Integer or Float!"; }
-	if(value < 0) value = 0; 
+	if(value < 0.00) value = 0; 
 	else if(value > 1.00) value = 1.00;
 
 	this._masterVolume = value;
@@ -294,8 +294,25 @@ function testIOS(event) {
 	if(RLSengine.AudioPlayer === null || RLSengine.AudioPlayer === "undefined") return;
 	console.log("Breaking IOS music wall...");
 	var song = RLSengine.AudioPlayer.songs[0];
-	RLSengine.AudioPlayer.play(song.name, {start: 0.0, volume: 0.0 , loop: false});
-	RLSengine.AudioPlayer.stop(song.name);
+	var audio_ctx = RLSengine.AudioPlayer._audio_ctx;
+	
+	var src = audio_ctx.createBufferSource();
+	src.buffer = song.buffer.buffer;
+
+	var gainNode = audio_ctx.createGain();
+	src.connect(gainNode);
+
+	gainNode.connect(audio_ctx.destination);
+	gainNode.gain.value = 0.0;
+
+	src.currentTime = 0.0; //Start
+	src.loop = false; //Loop
+
+	if (!src.start)
+		src.start = src.noteOn;	//<!-- (Prefix) Safari 6 (oud / deprecated)
+	src.start(0);
+
+	src.stop(0.5);
 	window.removeEventListener('touchend', testIOS); //bubbling = false (inner -> outer), capturing = true (outer -> inner)
 }
 
