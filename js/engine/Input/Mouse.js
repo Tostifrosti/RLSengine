@@ -15,14 +15,66 @@ function Mouse(canvas, scale) {
 Mouse.prototype._init = function() {
 	var self = this;
 	if(typeof window === "undefined") return;
+	
+	//Touch
+	window.ontouchstart = function(e) {
+		e = e || event; e.preventDefault();
+		var t = e.touches[0] || e.changedTouches[0];
+		var rect = RLSengine._canvas.getBoundingClientRect();
+		if(t) {
+			Mouse._pos.x = (t.pageX - rect.left) * Mouse._scale.x;
+			Mouse._pos.y = (t.pageY - rect.top) * Mouse._scale.y;
+		}
+		Mouse._mouseDown(t);
+	};
+	window.ontouchmove = function(e) {
+		e = e || event; e.preventDefault();
+		var t = e.touches[0] || e.changedTouches[0];
+		var rect = RLSengine._canvas.getBoundingClientRect();
+		if(t) {
+			Mouse._pos.x = (t.pageX - rect.left) * Mouse._scale.x;
+			Mouse._pos.y = (t.pageY - rect.top) * Mouse._scale.y;
+		}
+		Mouse._mouseMove(t);
+	};
+	window.ontouchend = function(e) {
+		e = e || event; e.preventDefault();
+		var t = e.touches[0] || e.changedTouches[0];
+		Mouse._mouseUp(t);
+	};
+	window.ontouchcancel = function(e) {
+		e = e || event; e.preventDefault();
+		var t = e.touches[0] || e.changedTouches[0];
+		Mouse._mouseUp(t);
+	};
+	//Mouse
+	window.onmousedown = function(e) {
+		e = e || event; e.preventDefault();
+		var rect = RLSengine._canvas.getBoundingClientRect();
+		Mouse._pos.x = (e.pageX - rect.left) * Mouse._scale.x;
+		Mouse._pos.y = (e.pageY - rect.top) * Mouse._scale.y;
+		Mouse._mouseDown(e);
+	};
+	window.onmousemove = function(e) {
+		e = e || event; e.preventDefault();
+		var rect = RLSengine._canvas.getBoundingClientRect();
+		Mouse._pos.x = (e.pageX - rect.left) * Mouse._scale.x;
+		Mouse._pos.y = (e.pageY - rect.top) * Mouse._scale.y;
+		
+		Mouse._mouseMove(e);
+	};
+	window.onmouseup = function(e) {
+		e = e || event; e.preventDefault();
+		Mouse._mouseUp(e);
+	};
 	if(window.navigator.msPointerEnabled) // For Windows Phone
 	{
+		//console.log("msPointerEnabled!");
 		window.MSPointerDown = function(e) {
 			e = e || event; e.preventDefault();
 			var rect = this.getBoundingClientRect();
 			Mouse._pos.x = (e.clientX - rect.left) * Mouse._scale.x;
 			Mouse._pos.y = (e.clientY - rect.top) * Mouse._scale.y;
-
 			Mouse._mouseDown(e);
 		};
 		window.MSPointerMove = function(e) {
@@ -34,57 +86,6 @@ Mouse.prototype._init = function() {
 			Mouse._mouseMove(e);
 		};
 		window.MSPointerUp = function(e) {
-			e = e || event; e.preventDefault();
-			Mouse._mouseUp(e);
-		};
-	} else // For all major browsers, IE 9 and above
-	{
-		window.ontouchstart = function(e) {
-			e = e || event; e.preventDefault();
-			var t = e.touches[0] || e.changedTouches[0];
-			var rect = RLSengine._canvas.getBoundingClientRect();
-			if(t) {
-				Mouse._pos.x = (t.pageX - rect.left) * Mouse._scale.x;
-				Mouse._pos.y = (t.pageY - rect.top) * Mouse._scale.y;
-			}
-			Mouse._mouseDown(t);
-		};
-		window.ontouchmove = function(e) {
-			e = e || event; e.preventDefault();
-			var t = e.touches[0] || e.changedTouches[0];
-			var rect = RLSengine._canvas.getBoundingClientRect();
-			if(t) {
-				Mouse._pos.x = (t.pageX - rect.left) * Mouse._scale.x;
-				Mouse._pos.y = (t.pageY - rect.top) * Mouse._scale.y;
-			}
-			Mouse._mouseMove(t);
-		};
-		window.ontouchend = function(e) {
-			e = e || event; e.preventDefault();
-			var t = e.touches[0] || e.changedTouches[0];
-			Mouse._mouseUp(t);
-		};
-		window.ontouchcancel = function(e) {
-			e = e || event; e.preventDefault();
-			var t = e.touches[0] || e.changedTouches[0];
-			Mouse._mouseUp(t);
-		};
-		window.onmousedown = function(e) {
-			e = e || event; e.preventDefault();
-			var rect = RLSengine._canvas.getBoundingClientRect();
-			Mouse._pos.x = (e.pageX - rect.left) * Mouse._scale.x;
-			Mouse._pos.y = (e.pageY - rect.top) * Mouse._scale.y;
-			Mouse._mouseDown(e);
-		};
-		window.onmousemove = function(e) {
-			e = e || event; e.preventDefault();
-			var rect = RLSengine._canvas.getBoundingClientRect();
-			Mouse._pos.x = (e.pageX - rect.left) * Mouse._scale.x;
-			Mouse._pos.y = (e.pageY - rect.top) * Mouse._scale.y;
-			
-			Mouse._mouseMove(e);
-		};
-		window.onmouseup = function(e) {
 			e = e || event; e.preventDefault();
 			Mouse._mouseUp(e);
 		};
