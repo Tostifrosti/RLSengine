@@ -13,7 +13,7 @@ function Mouse(canvas, scale) {
 
 /* SETUP */
 Mouse.prototype._init = function() {
-	var self = this;
+	//var self = this;
 	if(typeof window === "undefined") return;
 	
 	//Touch

@@ -138,7 +138,7 @@ AudioPlayer.prototype._loadContext = function() {
 	var currentSound = 0;
 	var totalSounds = 0;
 	var all_musicLoaded = false;
-	var curAudioFormat = null;
+	//var curAudioFormat = null;
 
 	for(var name in this._sounds) {
 		totalSounds++;

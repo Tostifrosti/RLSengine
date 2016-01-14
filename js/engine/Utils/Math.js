@@ -5,9 +5,12 @@
 if(typeof Math !== 'object') {
 	var Math = {
 		PI: 3.14159265359,
-		RAD_TO_DEG: (180 / this.PI),
-		DEG_TO_RAD: (this.PI / 180)
+		TO_DEGREES: (180 / this.PI),
+		TO_RADIANS: (this.PI / 180)
 	};
+} else {
+	Math.TO_DEGREES = (180 / Math.PI);
+	Math.TO_RADIANS = (Math.PI / 180);
 }
 
 Math.distance = function(x1, y1, x2, y2) {

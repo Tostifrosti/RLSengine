@@ -4,13 +4,12 @@ function MenuScreen() {
 	this.position = new Point(-this.anim.width, 500);
 	
 	//Button Start
-	this.btn_start = new Images(RLSengine.ImageManager.getImage("btn_start"), {x:(RLSengine.Display.canvas.getWidth()/2 - 137), y:100}, 275, 100);
+	this.btn_start = new Images(RLSengine.ImageManager.getImage("btn_start"), {x:(RLSengine.Display.canvas.getWidth()/2 - 137), y:100}, 275, 100, 0, true);
 	this.btn_start.scale = 0.00;
 	this.buttons_anim = new EffectSequence(new Effect(this.btn_start, "scale", 1.10, 0.4, 0), new Effect(this.btn_start, "scale", 0.95, 0.1), new Effect(this.btn_start, "scale", 1.0, 0.1));
 	RLSengine.Mouse.mouseDown(this.btn_start, this.btn_start, function() {
 		alert("Game still in progress!");
 	});
-
 
 	//Mute Button
 	this.btn_mute = new Images(RLSengine.ImageManager.getImage("muteOff"), {x: RLSengine.Display.canvas.getWidth() - 50, y: 25}, 40, 40);
@@ -31,7 +30,9 @@ function MenuScreen() {
 	});
 	//Emitter / Snow
 	//Emitter(point, velocity, emissionRate, maxParticles, spread)
-	this.emitters = [new Emitter(new Point(300, -500), Point.fromAngle(1.5, 1), 1, 3000, 2), new Emitter(new Point(600, -500), Point.fromAngle(1.5, 1), 1, 3000, 2), new Emitter(new Point(900, -500), Point.fromAngle(1.5, 1), 1, 3000, 2)];
+	this.emitters = [new Emitter(new Point(300, -500), Point.fromAngle(1.5, 1), 1, 3000, 2), 
+					new Emitter(new Point(600, -500), Point.fromAngle(1.5, 1), 1, 3000, 2), 
+					new Emitter(new Point(900, -500), Point.fromAngle(1.5, 1), 1, 3000, 2)];
 	RLSengine.AudioPlayer.play("SunnyDay", {volume: 0.5, loop: true});
 }
 
@@ -41,6 +42,7 @@ MenuScreen.prototype.update = function() {
 		this.emitters[i].update(RLSengine.Display.canvas.getWidth(), RLSengine.Display.canvas.getHeight() - 125);
 	}
 	this.anim.update(8);
+
 	if(!this.buttons_anim.isFinished()) {
 		this.buttons_anim.update();
 	} else {

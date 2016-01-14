@@ -16,5 +16,15 @@
 	</head>
 	<body>
 		<canvas>Please upgrade your browser to support HTML5!</canvas>
+		<!--
+			What are you doing?
+			Looking for secrets?
+
+			Don't put your nose where it doesn't belong.
+
+			Or you might learn something you DON'T like...
+
+			Hee Hee Hee.
+		-->
 	</body>
 </html>

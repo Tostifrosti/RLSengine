@@ -54,7 +54,7 @@ RLSengine.load = function() {
 	var mods = ['js/engine/Globals.js', 'js/engine/Utils/Array.js', 'js/engine/Utils/Point.js', 'js/engine/Utils/Math.js', 'js/engine/Utils/Device.js', 'js/engine/Utils/Timer.js', 
 				'js/engine/Display.js', 'js/engine/Input/Mouse.js', 'js/engine/Input/Keyboard.js', 'js/engine/Location.js',
 				'js/engine/Particle.js', 'js/engine/Effect.js', 'js/engine/EffectSequence.js', 'js/engine/XMLreader.js',
-				'js/engine/Images.js', 'js/engine/ImageManager.js', 'js/engine/Audio/Song.js', 'js/engine/Audio/Audioplayer2.js', 'js/engine/Animation.js',
+				'js/engine/Images.js', 'js/engine/ImageManager.js', 'js/engine/Audio/Song.js', 'js/engine/Audio/Audioplayer.js', 'js/engine/Animation.js',
 				'js/engine/Facebook.js', 'js/GameScreen.js', 'js/MenuScreen.js', 'js/Game.js'];
 	var count = mods.length;
 	for(var i=0; i < mods.length; i++) {
@@ -244,7 +244,7 @@ RLSengine.stop = function(dispose) {
 	
 	console.clear();
 	if(dispose) RLSengine.dispose();
-	RLSengine = null;
+	//RLSengine = null;
 }
 RLSengine.dispose = function()
 {
@@ -276,17 +276,5 @@ RLSengine.loadModule = function(mod, callback, error) {
 	var body = document.querySelector('head') || document.getElementsByTagName('head')[0];
 	body.appendChild(element);
 }
-//Zet dit onder elke subklasse: extend(raceauto, car);
-/*function extend(subConstructor, superConstructor) {
-	subConstructor.prototype = Object.create(superConstructor.prototype, {
-		constructor: {
-			value: subConstructor,
-			enumerable: false,
-			writeable: true,
-			configurable: true
-		}
-	});
-
-}*/
 
 window.onload = RLSengine;

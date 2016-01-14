@@ -2,6 +2,8 @@
 	@author RLSmedia, Rick Smeets
 */
 
+"use strict";
+
 function Display(canvas, context, width, height) {
 	this.canvas = canvas;
 	this.context = context;
@@ -84,7 +86,7 @@ Display.prototype.resize = function() {
 	RLSengine.Display.scale.x = (RLSengine.Display.canvas.getWidth() / RLSengine.Display.canvas.width);
 	RLSengine.Display.scale.y = (RLSengine.Display.canvas.getHeight() / RLSengine.Display.canvas.height);
 
-	//Mouse for PosX & PosY ??
+	//Mouse for posX & posY ??
 
 	//Maybe give commando to Animation to resize its values...
 
@@ -202,12 +204,37 @@ Display.prototype.drawArc = function(xCenter, yCenter, radius, startAngle, endAn
 	this.context.lineCap = lineCap;
 	this.context.strokeStyle = color;
 	this.context.stroke();
-	//this.context.closePath(); //<- ?
 };
-Display.prototype.fillRect = function(x, y, w, h, color) {
+Display.prototype.fillRect = function(x, y, w, h, color, alpha, angle) {
 	if(!this.webglenabled) {
-		this.context.fillStyle = color;
-		this.context.fillRect(x / this.scale.x, y / this.scale.y, w / this.scale.x, h / this.scale.y);
+		if(angle !== null && angle !== "undefined" && typeof angle === "number")
+		{
+			this.context.save();
+			this.context.translate((x + (w/2)) / this.scale.x, (y + (h/2)) / this.scale.y);
+			this.context.rotate(angle * Math.TO_RADIANS);
+			if(alpha !== null && alpha !== "undefined" && alpha >= 1.0)
+			{
+				this.context.globalAlpha = alpha;
+				this.context.fillStyle = color;
+				this.context.fillRect(-((w/2) / this.scale.x), -((h/2) / this.scale.y), w / this.scale.x, h / this.scale.y);
+				this.context.globalAlpha = 1.0;
+			} else {
+				this.context.fillStyle = color;
+				this.context.fillRect(-((w/2) / this.scale.x), -((h/2) / this.scale.y), w / this.scale.x, h / this.scale.y);
+			}
+			this.context.restore();
+		} else {
+			if(alpha !== null && alpha !== "undefined" && alpha >= 1.0)
+			{
+				this.context.globalAlpha = alpha;
+				this.context.fillStyle = color;
+				this.context.fillRect(x / this.scale.x, y / this.scale.y, w / this.scale.x, h / this.scale.y);
+				this.context.globalAlpha = 1.0;
+			} else {
+				this.context.fillStyle = color;
+				this.context.fillRect(x / this.scale.x, y / this.scale.y, w / this.scale.x, h / this.scale.y);
+			}
+		}
 	} else {
 		/*
 		var colorLocation = this.context.getUniformLocation(this.program, "u_color");
@@ -233,12 +260,34 @@ Display.prototype.fillRect = function(x, y, w, h, color) {
 	}
 };
 
-Display.prototype.drawImage = function(img, srcX, srcY, srcW, srcH, posX, posY, w, h, alpha) {
-	var alpha = alpha || 1.0;
+Display.prototype.drawImage = function(img, srcX, srcY, srcW, srcH, posX, posY, w, h, alpha, angle) {
 	if(!this.webglenabled) {
-		this.context.globalAlpha = alpha;
-		this.context.drawImage(img, srcX, srcY, srcW, srcH, posX / this.scale.x, posY / this.scale.y, w / this.scale.x, h / this.scale.y);
-		this.context.globalAlpha = 1.0;
+		if(angle !== null && angle !== "undefined" && typeof angle === "number")
+		{
+			this.context.save();
+			this.context.translate((posX + (w/2)) / this.scale.x, (posY + (h/2)) / this.scale.y);
+			this.context.rotate(angle * Math.TO_RADIANS);
+			if(alpha !== null && alpha !== "undefined" && alpha >= 1.0)
+			{
+				this.context.globalAlpha = alpha;
+				this.context.drawImage(img, srcX, srcY, srcW, srcH, -((w/2) / this.scale.x), -((h/2) / this.scale.y), w / this.scale.x, h / this.scale.y);
+				this.context.globalAlpha = 1.0;
+			} else {
+				this.context.drawImage(img, srcX, srcY, srcW, srcH, -((w/2) / this.scale.x), -((h/2) / this.scale.y), w / this.scale.x, h / this.scale.y);
+			}
+			this.context.restore();
+			
+		} else {
+			if(alpha !== null && alpha !== "undefined" && alpha >= 1.0)
+			{
+				this.context.globalAlpha = alpha;
+				this.context.drawImage(img, srcX, srcY, srcW, srcH, posX / this.scale.x, posY / this.scale.y, w / this.scale.x, h / this.scale.y);
+				this.context.globalAlpha = 1.0;
+			} else {
+				this.context.drawImage(img, srcX, srcY, srcW, srcH, posX / this.scale.x, posY / this.scale.y, w / this.scale.x, h / this.scale.y);
+			}
+		}
+		
 	}
 };
 
