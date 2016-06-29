@@ -26,11 +26,13 @@ Point.prototype.subtract = function(x, y) {
 	this.y -= y;
 	return this;
 };
+
 Point.prototype.multiply = function(x, y) {
 	this.x *= x;
 	this.y *= y;
 	return this;
 };
+
 Point.prototype.divide = function(x, y) {
 	this.x /= x;
 	this.y /= y;
@@ -55,9 +57,11 @@ Point.prototype.distance = function(p) {
 Point.prototype.toString = function() {
 	console.log("Point(" + this.x + "," + this.y + ")");
 };
+
 Point.prototype.getMagnitude = function() {
 	return Math.sqrt(this.x * this.x + this.y * this.y);
 };
+
 Point.prototype.getAngle = function() {
 	return Math.atan2(this.y, this.x);
 };

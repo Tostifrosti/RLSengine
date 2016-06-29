@@ -37,3 +37,10 @@ Math.degreesToRadians = function(degrees) {
 Math.isNumeric = function(n) { 
 	return !isNaN(parseFloat(n)) && isFinite(n);
 };
+
+// constant math functions
+const multiply = (x,y) => x * y;
+const divide = (x,y) => x / y;
+const equals = (x,y) => x === y;
+const magnitude = (x,y) => Math.sqrt(x * x + y * y);
+const angle = (x,y) => Math.atan2(x,y);

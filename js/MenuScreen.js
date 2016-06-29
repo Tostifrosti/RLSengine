@@ -1,7 +1,7 @@
 function MenuScreen() {
 	this.background = new Images(RLSengine.ImageManager.getImage("home"), {x:0, y:0}, RLSengine.Display.canvas.getWidth(), RLSengine.Display.canvas.getHeight());
-	this.anim = new Animation(RLSengine.ImageManager.getImage("dochter_rechts"), 88, 67.5, [5,6,7,8,9,10], 0);
-	this.position = new Point(-this.anim.width, 500);
+	this.player = new Animation(RLSengine.ImageManager.getImage("dochter_rechts"), 88, 67.5, [5,6,7,8,9,10], 0);
+	this.position = new Point(-this.player.width, 500);
 	
 	//Button Start
 	this.btn_start = new Images(RLSengine.ImageManager.getImage("btn_start"), {x:(RLSengine.Display.canvas.getWidth()/2 - 137), y:100}, 275, 100, 0, true);
@@ -25,7 +25,7 @@ function MenuScreen() {
 	});
 
 
-	RLSengine.Mouse.mouseUp(this.position, this.anim, function() {
+	RLSengine.Mouse.mouseUp(this.position, this.player, function() {
 		alert("Stop slapping the girl!");
 	});
 	//Emitter / Snow
@@ -41,7 +41,7 @@ MenuScreen.prototype.update = function() {
 	for(var i=0; i<this.emitters.length; i++) {
 		this.emitters[i].update(RLSengine.Display.canvas.getWidth(), RLSengine.Display.canvas.getHeight() - 125);
 	}
-	this.anim.update(8);
+	this.player.update(8);
 
 	if(!this.buttons_anim.isFinished()) {
 		this.buttons_anim.update();
@@ -66,8 +66,8 @@ MenuScreen.prototype.update = function() {
 		}
 	});*/
 
-	if(this.position.x >= RLSengine.Display.canvas.getWidth() + this.anim.width) {
-		this.position.x = -this.anim.width;
+	if(this.position.x >= RLSengine.Display.canvas.getWidth() + this.player.width) {
+		this.position.x = -this.player.width;
 	} else {
 		this.position.x += 2;
 	}
@@ -78,7 +78,7 @@ MenuScreen.prototype.draw = function() {
 	this.background.draw();
 
 	//Animation
-	this.anim.draw(this.position.x, this.position.y);
+	this.player.draw(this.position.x, this.position.y);
 
 	this.emitters[0].draw(4, "rgba(255,255,255,0.2)");
 	this.emitters[1].draw(2, "rgba(255,255,255,0.7)");
